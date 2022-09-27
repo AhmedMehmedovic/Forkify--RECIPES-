@@ -25,7 +25,7 @@ export const loadRecipe = async function (id) {
       image: recipe.image_url,
       servings: recipe.servings,
       cookingTime: recipe.cooking_time,
-      ingredients: recipe.ingredients,
+      ingredients: recipe.ingredients, ///informacija o sastojcima
     };
 
     // console.log(state.recipe);
@@ -57,9 +57,9 @@ export const loadSearchResults = async function (query) {
 
 //paginacija
 export const getSearchResultsPage = function (page = state.search.page) {
-  // ako npr imamo 1 stranicu : 1-1 = 0 puta 10 je 0 npr: 2- 1 = 1 puta 10 = 10 a krajnja tacka izadje 20 ( znaci na drugoj strnaici prikazati od 10 do 20 rezultat)
+  // ako npr imamo 1 stranicu : 1-1 = 0 puta 10 je 0 npr: 2- 1 = 1 puta 10 = 10 a krajnja tacka izadje 20 ( znaci na drugoj stranici prikazati od 10 do 20 rezultat)
 
-  state.search.page = page;
+  state.search.page = page; // updatovat ce se posle preracuna paginacije (goto parametra)
   const start = (page - 1) * 10; // 0
   const end = page * state.search.resultsPerPage; // 9
 

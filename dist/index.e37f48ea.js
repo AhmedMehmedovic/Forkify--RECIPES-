@@ -539,6 +539,8 @@ var _recepieViewJs = require("./view/recepieView.js");
 var _recepieViewJsDefault = parcelHelpers.interopDefault(_recepieViewJs);
 var _resultsViewJs = require("./view/resultsView.js");
 var _resultsViewJsDefault = parcelHelpers.interopDefault(_resultsViewJs);
+var _paginationViewJs = require("./view/paginationView.js");
+var _paginationViewJsDefault = parcelHelpers.interopDefault(_paginationViewJs);
 var _runtime = require("regenerator-runtime/runtime");
 var _regeneratorRuntime = require("regenerator-runtime");
 var _searchView = require("./view/searchView");
@@ -547,6 +549,7 @@ var _searchViewDefault = parcelHelpers.interopDefault(_searchView);
 // if (module.hot) {
 //   module.hot.accept();
 // }
+////////////////////************************************************** */
 const controlRecipes = async function() {
     try {
         const id = window.location.hash.slice(1);
@@ -563,26 +566,39 @@ const controlRecipes = async function() {
         (0, _recepieViewJsDefault.default).renderError();
     }
 };
+///////////////////********************************************////////////////// */
 const controlSearchResults = async function() {
     try {
         (0, _resultsViewJsDefault.default).renderSpiner();
         const query = (0, _searchViewDefault.default).getQuery();
         if (!query) return;
         await _modelJs.loadSearchResults(query);
+        // Rendanje  rezultata rezultata
         //   console.log(model.state.search.results);
         // rezultati prije paginacije za ucitavanje  resultsView.render(model.state.search.results);
         (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultsPage());
+        // render initial pagination buttons
+        (0, _paginationViewJsDefault.default).render(_modelJs.state.search);
     } catch (err) {
         console.log(err);
     }
 };
+/////////////****************///////////////////*************** */ */
+const controlPaginationaButtns = function(goToPage) {
+    //Rendanje novih rezultata uz paginaciju
+    (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultsPage(goToPage));
+    (0, _paginationViewJsDefault.default).render(_modelJs.state.search);
+// goto page broj stranice__>> console.log(goToPage);
+};
+/////////////////////////////////////////////*///*******/////////// */
 const init = function() {
     (0, _recepieViewJsDefault.default).addHandlerRender(controlRecipes);
     (0, _searchViewDefault.default).addHandlerSearch(controlSearchResults);
+    (0, _paginationViewJsDefault.default).addHandlerClick(controlPaginationaButtns);
 };
 init();
 
-},{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","./view/recepieView.js":"kHGKg","./view/resultsView.js":"46Nfk","regenerator-runtime/runtime":"dXNgZ","regenerator-runtime":"dXNgZ","./view/searchView":"blwqv","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"49tUX":[function(require,module,exports) {
+},{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","./view/recepieView.js":"kHGKg","./view/resultsView.js":"46Nfk","./view/paginationView.js":"9Reww","regenerator-runtime/runtime":"dXNgZ","regenerator-runtime":"dXNgZ","./view/searchView":"blwqv","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"49tUX":[function(require,module,exports) {
 // TODO: Remove this module from `core-js@4` since it's split to modules listed below
 require("../modules/web.clear-immediate");
 require("../modules/web.set-immediate");
@@ -1747,8 +1763,8 @@ const loadSearchResults = async function(query) {
     }
 };
 const getSearchResultsPage = function(page = state.search.page) {
-    // ako npr imamo 1 stranicu : 1-1 = 0 puta 10 je 0 npr: 2- 1 = 1 puta 10 = 10 a krajnja tacka izadje 20 ( znaci na drugoj strnaici prikazati od 10 do 20 rezultat)
-    state.search.page = page;
+    // ako npr imamo 1 stranicu : 1-1 = 0 puta 10 je 0 npr: 2- 1 = 1 puta 10 = 10 a krajnja tacka izadje 20 ( znaci na drugoj stranici prikazati od 10 do 20 rezultat)
+    state.search.page = page; // updatovat ce se posle preracuna paginacije (goto parametra)
     const start = (page - 1) * 10; // 0
     const end = page * state.search.resultsPerPage; // 9
     return state.search.results.slice(start, end);
@@ -2329,7 +2345,7 @@ parcelHelpers.export(exports, "TIMEOUT_SECONDS", ()=>TIMEOUT_SECONDS);
 parcelHelpers.export(exports, "RESULT_PER_PAGE", ()=>RESULT_PER_PAGE);
 const API_URL = "https://forkify-api.herokuapp.com/api/v2/recipes/";
 const TIMEOUT_SECONDS = 10;
-const RESULT_PER_PAGE = 10;
+const RESULT_PER_PAGE = 5;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
@@ -2408,7 +2424,7 @@ class RecipeView extends (0, _viewDefault.default) {
         ].forEach((event)=>window.addEventListener(event, handler));
     }
     _generateMarkup() {
-        console.log(this.data);
+        // generisanje html recepata console.log(this.data);
         return `
     <figure class="recipe__fig">
           <img src="${this._data.image}" alt="${this._data.title}" class="recipe__img" />
@@ -2510,15 +2526,17 @@ var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 class View {
     _data;
     render(data) {
+        console.log(data.results);
         if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
         this._data = data;
         const markup = this._generateMarkup();
-        this._clear();
+        this._clear(); //// cisti html content prije rendanja ponovo
         this._parrentElement.insertAdjacentHTML("afterbegin", markup);
     }
     _clear() {
-        this._parrentElement.innerHTML = "";
+        this._parrentElement.innerHTML = ""; ///prazni innerHtml
     }
+    // funkcija za rendanje spinera dok ceka ucitavanje
     renderSpiner() {
         const markup = `
       <div class="spinner">
@@ -2859,7 +2877,7 @@ class ResultsView extends (0, _viewDefault.default) {
     _errorMessage = "No recepies found for youre query! Please try again!";
     _message = "";
     _generateMarkup() {
-        console.log(this._data);
+        // data koja sadrzi podatke rezultata pretrage  console.log(this._data);
         return this._data.map(this._generateMarkupPrewiew).join("");
     }
     _generateMarkupPrewiew(result) {
@@ -2880,6 +2898,65 @@ class ResultsView extends (0, _viewDefault.default) {
     }
 }
 exports.default = new ResultsView();
+
+},{"./view":"4wVyX","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9Reww":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _view = require("./view");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+class PaginationView extends (0, _viewDefault.default) {
+    _parrentElement = document.querySelector(".pagination");
+    addHandlerClick(handler) {
+        this._parrentElement.addEventListener("click", function(e) {
+            const btn = e.target.closest(".btn--inline");
+            console.log(btn);
+            if (!btn) return; // ako nema dugmeta vrati se odma ( da ne izbacuje gresku kad kliknemo pored dugmeta)
+            const goToPage = +btn.dataset.goto;
+            console.log(goToPage);
+            handler(goToPage);
+        });
+    }
+     #generatePreviousBtn(currentPage) {
+        return `
+    <button data-goto="${currentPage - 1}" class="btn--inline pagination__btn--prev">
+          <svg class="search__icon">
+            <use href="${0, _iconsSvgDefault.default}#icon-arrow-left"></use>
+          </svg>
+          <span>Page ${currentPage - 1}</span>
+        </button>
+        `;
+    }
+     #generateNextBtn(currentPage1) {
+        return `
+    <button data-goto="${///uz data-goto dobijemo trebnutni broj stranice na koji smo kliknuli
+        currentPage1 + 1}" class="btn--inline pagination__btn--next">
+          <span>Page ${currentPage1 + 1}</span>
+          <svg class="search__icon">
+            <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
+          </svg>
+        </button>
+    `;
+    }
+    _generateMarkup() {
+        // definisanje trenutne stranice
+        const currentPage = this._data.page;
+        // broj stranica
+        const numberPages = Math.ceil(// Math.ciel () zaokruzuje brojeve na cijele brojeve npr 5.9 = 6
+        this._data.results.length / this._data.resultsPerPage);
+        console.log(numberPages);
+        //page 1 and there are other pages
+        if (currentPage === 1 && numberPages > 1) return this.#generateNextBtn(currentPage);
+        // last page
+        if (currentPage === numberPages && numberPages > 1) return this.#generatePreviousBtn(currentPage);
+        // other page
+        if (currentPage < numberPages) return this.#generatePreviousBtn(currentPage) + this.#generateNextBtn(currentPage);
+        // page 1 and there are no other pages
+        return "";
+    }
+}
+exports.default = new PaginationView();
 
 },{"./view":"4wVyX","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"blwqv":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");

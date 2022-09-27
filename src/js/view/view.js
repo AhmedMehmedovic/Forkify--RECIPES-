@@ -2,19 +2,24 @@ import icons from 'url:../../img/icons.svg';
 
 export default class View {
   _data;
+
   render(data) {
+    console.log(data.results);
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
+
     this._data = data;
     const markup = this._generateMarkup();
-    this._clear();
+    this._clear(); //// cisti html content prije rendanja ponovo
 
     this._parrentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
   _clear() {
-    this._parrentElement.innerHTML = '';
+    this._parrentElement.innerHTML = ''; ///prazni innerHtml
   }
+
+  // funkcija za rendanje spinera dok ceka ucitavanje
 
   renderSpiner() {
     const markup = `
