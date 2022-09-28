@@ -60,9 +60,22 @@ export const getSearchResultsPage = function (page = state.search.page) {
   // ako npr imamo 1 stranicu : 1-1 = 0 puta 10 je 0 npr: 2- 1 = 1 puta 10 = 10 a krajnja tacka izadje 20 ( znaci na drugoj stranici prikazati od 10 do 20 rezultat)
 
   state.search.page = page; // updatovat ce se posle preracuna paginacije (goto parametra)
-  const start = (page - 1) * 10; // 0
+  const start = (page - 1) * state.search.resultsPerPage; // 0
   const end = page * state.search.resultsPerPage; // 9
 
   return state.search.results.slice(start, end);
 };
 //loadSearchResults('pizza');
+
+/// updejtovanje kolicina za koliko osoba
+export const updateServings = function (newServings) {
+  state.recipe.ingredients.forEach(ingridient => {
+    ingridient.quantity =
+      (ingridient.quantity * newServings) / state.recipe.servings;
+
+    /// formula za racunanje kolicina koliko treba za izradu recepta
+    // newQuantity = oldQuantity * newServings / oldServings   ////  2*8 / 4 = 4
+  });
+
+  state.recipe.servings = newServings;
+};

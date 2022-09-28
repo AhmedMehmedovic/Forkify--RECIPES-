@@ -7,11 +7,10 @@ class PaginationView extends View {
   addHandlerClick(handler) {
     this._parrentElement.addEventListener('click', function (e) {
       const btn = e.target.closest('.btn--inline');
-      console.log(btn);
+      //   console.log(btn);
       if (!btn) return; // ako nema dugmeta vrati se odma ( da ne izbacuje gresku kad kliknemo pored dugmeta)
 
       const goToPage = +btn.dataset.goto;
-      console.log(goToPage);
       handler(goToPage);
     });
   }
@@ -51,7 +50,7 @@ class PaginationView extends View {
       this._data.results.length / this._data.resultsPerPage
     );
 
-    console.log(numberPages);
+    // console.log(numberPages);
     //page 1 and there are other pages
     if (currentPage === 1 && numberPages > 1) {
       return this.#generateNextBtn(currentPage);
