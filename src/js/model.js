@@ -10,6 +10,7 @@ export const state = {
     page: 1,
     resultsPerPage: RESULT_PER_PAGE,
   },
+  bookmarks: [],
 };
 
 export const loadRecipe = async function (id) {
@@ -27,6 +28,11 @@ export const loadRecipe = async function (id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients, ///informacija o sastojcima
     };
+
+    ///zapamti fill bookmark prilikom ponovnog rendanja
+    if (state.bookmarks.some(bookmark => bookmark.id === id))
+      state.recipe.bookmarked = true;
+    else state.recipe.bookmarked = false;
 
     // console.log(state.recipe);
   } catch (err) {
@@ -50,6 +56,7 @@ export const loadSearchResults = async function (query) {
         image: rec.image_url,
       };
     });
+    state.search.page = 1; ///restartujemo broj stranice koja se prikazuje prilikom svake pretrage (bug) postavljamo stranicu ponovo na 1
   } catch (err) {
     console.log(`${err}`);
   }
@@ -79,3 +86,37 @@ export const updateServings = function (newServings) {
 
   state.recipe.servings = newServings;
 };
+
+//// spremanje cekiranih recepata (bookmark) u localstorage
+const storingBookmarks = function () {
+  localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+};
+export const addBookmark = function (recipe) {
+  // dodavanje recepata u array bookmark
+  state.bookmarks.push(recipe);
+
+  ////oznacavanje trenutnog recepta u bookmark
+  if (recipe.id === state.recipe.id) state.recipe.bookmarked = true; // ako je id recepta proslijedjenog jednak onom u aplikaciji trenutnom  onda  postavljamo state.recipe.bookmarked true
+  storingBookmarks();
+};
+
+/////********************DELETE BOOKMARK */
+export const deleteBookmark = function (id) {
+  const index = state.bookmarks.findIndex(el => el.id === id);
+  state.bookmarks.splice(index, 1);
+  ////brisanje trenutnog recepta iz bookmark
+  if (id === state.recipe.id) state.recipe.bookmarked = false;
+  storingBookmarks();
+};
+
+const init = function () {
+  const storage = localStorage.getItem('bookmarks');
+  if (storage) state.bookmarks = JSON.parse(storage);
+};
+
+init();
+// console.log(state.bookmarks);
+const clearBookmarks = function () {
+  localStorage.clear('bookmarks');
+};
+//clearBookmarks();

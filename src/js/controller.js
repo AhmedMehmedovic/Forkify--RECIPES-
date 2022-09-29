@@ -2,6 +2,7 @@ import * as model from './model.js';
 import RecipeView from './view/recepieView.js';
 import resultsView from './view/resultsView.js';
 import paginationView from './view/paginationView.js';
+import bookmarksView from './view/bookmarksView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -25,6 +26,7 @@ const controlRecipes = async function () {
     /// updejtovanje rezultata kako bi vidjeli koji je recept markiran tj selektovan
 
     resultsView.update(model.getSearchResultsPage()); /// isto kao sto dole koristimo render methodu na liniji 61 ovdje koristimo update kako ne bi ponovo rendali cijeli sadrzaj
+    bookmarksView.update(model.state.bookmarks);
 
     //iz modela
     await model.loadRecipe(id);
@@ -39,6 +41,7 @@ const controlRecipes = async function () {
     // controlServings();
   } catch (err) {
     recepieView.renderError();
+    console.log(err);
   }
 };
 
@@ -91,11 +94,36 @@ const controlServings = function (newServings) {
   RecipeView.update(model.state.recipe);
 };
 /////////////////////////////////////////////*///*******/////////// */
+
+///////////****************** Oznacavanje bookmarked recepta fill i not fill*/
+const controlAddBookmark = function () {
+  ////zelimo samo kada recept nije vec spremljen u bookmarked
+  //console.log(model.state.recipe.bookmarked);
+
+  /////1 add or remove bookmark
+
+  if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
+  else model.deleteBookmark(model.state.recipe.id);
+  // console.log(model.state.recipe);
+  ////2 update recipeView
+  recepieView.update(model.state.recipe);
+
+  ////3 render bookmarks
+  bookmarksView.render(model.state.bookmarks);
+};
+
+////////////**************** */
+const controlBookmarks = function () {
+  bookmarksView.render(model.state.bookmarks);
+};
 const init = function () {
+  bookmarksView.addHandlerRender(controlBookmarks);
   recepieView.addHandlerRender(controlRecipes);
   recepieView.addHandlerUpdateServings(controlServings);
+  recepieView.addHandlerAddBookmark(controlAddBookmark);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
+
   //// ucitavamo ali jos uvijek nije stigao odgovor ucitavanja recepata async await
   // controlServings();
 };

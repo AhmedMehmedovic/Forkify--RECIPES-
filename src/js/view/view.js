@@ -3,21 +3,29 @@ import icons from 'url:../../img/icons.svg';
 
 export default class View {
   _data;
+  ////////////************************* */
+  ////////////************************* */
 
-  render(data) {
+  render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
 
     this._data = data;
     const markup = this._generateMarkup();
+
+    if (!render) return markup;
+
     this._clear(); //// cisti html content prije rendanja ponovo
 
     this._parrentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
+  ////////////************************* */
   _clear() {
     this._parrentElement.innerHTML = ''; ///prazni innerHtml
   }
+
+  ////////////************************* */
 
   update(data) {
     this._data = data;
@@ -49,6 +57,9 @@ export default class View {
       // if (!newEl.isEqualNode(curentEl)) console.log(newEl.attributes);
     });
   }
+
+  ////////////************************* */
+
   // funkcija za rendanje spinera dok ceka ucitavanje
 
   renderSpiner() {
@@ -64,6 +75,8 @@ export default class View {
     this._parrentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
+  ////////////************************* */
+
   renderError(message = this._errorMessage) {
     const markup = `<div class="error">
       <div>
@@ -76,6 +89,8 @@ export default class View {
     this._clear();
     this._parrentElement.insertAdjacentHTML('afterbegin', markup);
   }
+
+  ////////////************************* */
 
   renderMessage(message = this._message) {
     const markup = `<div class="message">

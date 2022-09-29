@@ -15,10 +15,12 @@ class RecipeView extends View {
     );
   }
 
+  /////////////************ ADDLISTENER ZA KLIK NA SERVING PROMJENU BROJA PORCIJA**************** */
+
   addHandlerUpdateServings(handler) {
     this._parrentElement.addEventListener('click', e => {
       const btn = e.target.closest('.btn--update-servings');
-      console.log(btn);
+      // console.log(btn);
       if (!btn) return;
       const { updateTo } = btn.dataset; ///uz + pretvaramo u int
 
@@ -27,7 +29,18 @@ class RecipeView extends View {
       if (+updateTo > 0) handler(+updateTo);
     });
   }
+  /////////////************ **************** */
 
+  /////////////************ ADDLISTENER ZA KLIK NA BOOKMARK**************** */
+  addHandlerAddBookmark(handler) {
+    this._parrentElement.addEventListener('click', function (e) {
+      const btnBookmark = e.target.closest('.btn--bookmark');
+      if (!btnBookmark) return;
+
+      handler();
+    });
+  }
+  ////////////**************************** */
   _generateMarkup() {
     // generisanje html recepata console.log(this.data);
     return `
@@ -77,12 +90,14 @@ class RecipeView extends View {
               </button>
             </div>
           </div>
-          <div class="recipe__user-generated">
+           <div class="recipe__user-generated">
           
-          </div>
-          <button class="btn--round">
+           </div>
+          <button class="btn--round btn--bookmark">
             <svg class="">
-              <use href="${icons}#icon-bookmark-fill"></use>
+              <use href="${icons}#icon-bookmark${
+      this._data.bookmarked ? '-fill' : ''
+    }"></use>
             </svg>
           </button>
         </div>
