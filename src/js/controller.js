@@ -3,6 +3,7 @@ import RecipeView from './view/recepieView.js';
 import resultsView from './view/resultsView.js';
 import paginationView from './view/paginationView.js';
 import bookmarksView from './view/bookmarksView.js';
+import addRecipeView from './view/addRecipeView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -116,6 +117,20 @@ const controlAddBookmark = function () {
 const controlBookmarks = function () {
   bookmarksView.render(model.state.bookmarks);
 };
+
+///////////********kontroler za primanje novi podataka od unosa novog recepta */
+
+const controlAddRecipe = async function (newRecipe) {
+  try {
+    await model.uploadRecipe(newRecipe);
+  } catch (err) {
+    console.log('14141' + err);
+    addRecipeView.renderError(err.message);
+  }
+  // console.log(newRecipe);
+  ///Upload novi recipe data
+};
+
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
   recepieView.addHandlerRender(controlRecipes);
@@ -123,6 +138,7 @@ const init = function () {
   recepieView.addHandlerAddBookmark(controlAddBookmark);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
+  addRecipeView.addHandlerUpload(controlAddRecipe);
 
   //// ucitavamo ali jos uvijek nije stigao odgovor ucitavanja recepata async await
   // controlServings();

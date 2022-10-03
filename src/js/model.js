@@ -120,3 +120,25 @@ const clearBookmarks = function () {
   localStorage.clear('bookmarks');
 };
 //clearBookmarks();
+
+export const uploadRecipe = async function (newRecipe) {
+  try {
+    const ingredients = Object.entries(newRecipe)
+      .filter(entry => entry[0].startsWith('ingredient') && entry[1] !== '')
+      .map(ing => {
+        const ingArray = ing[1].replaceAll(' ', '').split(',');
+
+        if (ingArray.length !== 3)
+          throw new Error(
+            'Wrong ingridient format. Please use the correct format.'
+          );
+
+        const [quantity, unit, description] = ingArray;
+
+        return { quantity: quantity ? +quantity : null, unit, description };
+      });
+    console.log(ingredients);
+  } catch (err) {
+    throw err;
+  }
+};
