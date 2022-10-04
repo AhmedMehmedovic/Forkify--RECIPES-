@@ -50,24 +50,23 @@ export const loadRecipe = async function (id) {
 
 export const loadSearchResults = async function (query) {
   try {
+    //console.log(query);
     state.search.query = query;
-    const data = await AJAX(`${API_URL}?search=${query}&?key=${KEY}`); //// ?key=${KEY} dodajemo vlastiti kljuc u api
-
+    const data = await AJAX(`${API_URL}?search=${query}&key=${KEY}`); //// ?key=${KEY} dodajemo vlastiti kljuc u api
+    //  console.log(data);
     state.search.results = data.data.recipes.map(rec => {
       return {
         id: rec.id,
         title: rec.title,
         publisher: rec.publisher,
         image: rec.image_url,
-        ...(recipe.key && { key: recipe.key }),
+        ...(rec.key && { key: rec.key }),
       };
     });
-    console.log(query);
 
-    console.log(state.search.results);
     state.search.page = 1; ///restartujemo broj stranice koja se prikazuje prilikom svake pretrage (bug) postavljamo stranicu ponovo na 1
   } catch (err) {
-    console.log(`${err}`);
+    console.error(`${err}`);
   }
 };
 
@@ -100,6 +99,8 @@ export const updateServings = function (newServings) {
 const storingBookmarks = function () {
   localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
 };
+
+///**********///// */
 export const addBookmark = function (recipe) {
   // dodavanje recepata u array bookmark
   state.bookmarks.push(recipe);
@@ -157,11 +158,11 @@ export const uploadRecipe = async function (newRecipe) {
       ingredients,
     };
 
-    console.log(recipe);
-    return;
+    //console.log(recipe);
+
     const data = await AJAX(`${API_URL}?key=${KEY}`, recipe); //// saljemo data( post request) dadajemo novi unos svog recepta i saljemo ka api url uz svoj key generisan na forkify
     state.recipe = createRecipeObject(data);
-
+    // console.log(state.recipe);
     addBookmark(state.recipe);
   } catch (err) {
     throw err;

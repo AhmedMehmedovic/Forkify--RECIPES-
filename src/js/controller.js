@@ -33,7 +33,7 @@ const controlRecipes = async function () {
     //iz modela
     await model.loadRecipe(id);
 
-    const { recipe } = model.state;
+    //const { recipe } = model.state;
 
     // Rendering recepi
     //deklarisanje recepi view iz tog fajla
@@ -43,7 +43,7 @@ const controlRecipes = async function () {
     // controlServings();
   } catch (err) {
     recepieView.renderError();
-    //  console.log(err);
+    console.log(err);
   }
 };
 
@@ -53,7 +53,7 @@ const controlSearchResults = async function () {
   try {
     const query = searchView.getQuery();
 
-    // if (!query) return;
+    if (!query) return;
     resultsView.renderSpiner();
 
     await model.loadSearchResults(query);
@@ -127,7 +127,7 @@ const controlAddRecipe = async function (newRecipe) {
 
     // upload the new recipe in data
     await model.uploadRecipe(newRecipe);
-    console.log(model.state.recipe); //308 lekc
+    //  console.log(model.state.recipe); //308 lekc
 
     //render recipe
 
@@ -135,14 +135,13 @@ const controlAddRecipe = async function (newRecipe) {
 
     //succes message
     addRecipeView.renderMessage();
-
     // render bookmark view
     bookmarksView.render(model.state.bookmarks);
 
     //change ID in url
 
-    window.history.pushState(null, '', `#${model.state.recipe.id}`);
-    // window.history.back()
+    window.history.pushState(null, '', `#${model.state.recipe.id}`); //mijenjamo url bez da refreshujemo browser
+    // window.history.back() klikom u browseru za nazad automatski idemo nazad
 
     /// close form window
     setTimeout(function () {
@@ -158,11 +157,11 @@ const controlAddRecipe = async function (newRecipe) {
 
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
-  searchView.addHandlerSearch(controlSearchResults);
+
   recepieView.addHandlerRender(controlRecipes);
   recepieView.addHandlerUpdateServings(controlServings);
   recepieView.addHandlerAddBookmark(controlAddBookmark);
-
+  searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
   addRecipeView.addHandlerUpload(controlAddRecipe);
 
