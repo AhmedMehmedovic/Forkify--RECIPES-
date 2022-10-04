@@ -1,4 +1,5 @@
 import * as model from './model.js';
+import { MODAL_CLOSE_SEC, RESULT_PER_PAGE } from './config.js';
 import RecipeView from './view/recepieView.js';
 import resultsView from './view/resultsView.js';
 import paginationView from './view/paginationView.js';
@@ -42,7 +43,7 @@ const controlRecipes = async function () {
     // controlServings();
   } catch (err) {
     recepieView.renderError();
-    console.log(err);
+    //  console.log(err);
   }
 };
 
@@ -50,11 +51,10 @@ const controlRecipes = async function () {
 
 const controlSearchResults = async function () {
   try {
-    resultsView.renderSpiner();
-
     const query = searchView.getQuery();
 
-    if (!query) return;
+    // if (!query) return;
+    resultsView.renderSpiner();
 
     await model.loadSearchResults(query);
 
@@ -119,10 +119,35 @@ const controlBookmarks = function () {
 };
 
 ///////////********kontroler za primanje novi podataka od unosa novog recepta */
-
+/// iz model.js uploadRecipe je async funcija i vraca promise, da bi rendali gresku cekamo da se vrati promis zato dodajemo await u try bloku
 const controlAddRecipe = async function (newRecipe) {
   try {
+    //show loading spiner
+    addRecipeView.renderSpiner();
+
+    // upload the new recipe in data
     await model.uploadRecipe(newRecipe);
+    console.log(model.state.recipe); //308 lekc
+
+    //render recipe
+
+    recepieView.render(model.state.recipe);
+
+    //succes message
+    addRecipeView.renderMessage();
+
+    // render bookmark view
+    bookmarksView.render(model.state.bookmarks);
+
+    //change ID in url
+
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
+    // window.history.back()
+
+    /// close form window
+    setTimeout(function () {
+      addRecipeView.toggleWindow();
+    }, MODAL_CLOSE_SEC * 1000); ///*1000 pretvara broj nasih sekundi u milisekunde
   } catch (err) {
     console.log('14141' + err);
     addRecipeView.renderError(err.message);
@@ -133,10 +158,11 @@ const controlAddRecipe = async function (newRecipe) {
 
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
+  searchView.addHandlerSearch(controlSearchResults);
   recepieView.addHandlerRender(controlRecipes);
   recepieView.addHandlerUpdateServings(controlServings);
   recepieView.addHandlerAddBookmark(controlAddBookmark);
-  searchView.addHandlerSearch(controlSearchResults);
+
   paginationView.addHandlerClick(controlPaginationaButtns);
   addRecipeView.addHandlerUpload(controlAddRecipe);
 

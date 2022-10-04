@@ -1,6 +1,7 @@
 import { async } from 'regenerator-runtime';
-import { API_URL, RESULT_PER_PAGE } from './config';
-import { getJSON } from './helpers';
+import { API_URL, RESULT_PER_PAGE, KEY } from './config';
+//import { getJSON, sendJSON } from './helpers'; /// zamijenjeno sa jednom funkcijom AJAX
+import { AJAX } from './helpers';
 
 export const state = {
   recipe: {},
@@ -13,22 +14,26 @@ export const state = {
   bookmarks: [],
 };
 
+const createRecipeObject = function (data) {
+  const { recipe } = data.data;
+  return {
+    id: recipe.id,
+    title: recipe.title,
+    publisher: recipe.publisher,
+    sourceUrl: recipe.source_url,
+    image: recipe.image_url,
+    servings: recipe.servings,
+    cookingTime: recipe.cooking_time,
+    ingredients: recipe.ingredients, ///informacija o sastojcima
+    ...(recipe.key && { key: recipe.key }), /// ukoliko ne postoji recipe.key, nece se desiti nista, medjutim ukoliko postoji onda ce se spremiti kao da je napisano 'key: recipe.key ' (zaduzen spread operatotr ...)
+  };
+};
+
 export const loadRecipe = async function (id) {
   try {
-    const data = await getJSON(`${API_URL}${id}`);
+    const data = await AJAX(`${API_URL}${id}?key=${KEY}`);
 
-    const { recipe } = data.data;
-    state.recipe = {
-      id: recipe.id,
-      title: recipe.title,
-      publisher: recipe.publisher,
-      sourceUrl: recipe.source_url,
-      image: recipe.image_url,
-      servings: recipe.servings,
-      cookingTime: recipe.cooking_time,
-      ingredients: recipe.ingredients, ///informacija o sastojcima
-    };
-
+    state.recipe = createRecipeObject(data);
     ///zapamti fill bookmark prilikom ponovnog rendanja
     if (state.bookmarks.some(bookmark => bookmark.id === id))
       state.recipe.bookmarked = true;
@@ -46,7 +51,7 @@ export const loadRecipe = async function (id) {
 export const loadSearchResults = async function (query) {
   try {
     state.search.query = query;
-    const data = await getJSON(`${API_URL}?search=${query}`);
+    const data = await AJAX(`${API_URL}?search=${query}&?key=${KEY}`); //// ?key=${KEY} dodajemo vlastiti kljuc u api
 
     state.search.results = data.data.recipes.map(rec => {
       return {
@@ -54,8 +59,12 @@ export const loadSearchResults = async function (query) {
         title: rec.title,
         publisher: rec.publisher,
         image: rec.image_url,
+        ...(recipe.key && { key: recipe.key }),
       };
     });
+    console.log(query);
+
+    console.log(state.search.results);
     state.search.page = 1; ///restartujemo broj stranice koja se prikazuje prilikom svake pretrage (bug) postavljamo stranicu ponovo na 1
   } catch (err) {
     console.log(`${err}`);
@@ -135,9 +144,25 @@ export const uploadRecipe = async function (newRecipe) {
 
         const [quantity, unit, description] = ingArray;
 
-        return { quantity: quantity ? +quantity : null, unit, description };
+        return { quantity: quantity ? +quantity : null, unit, description }; //ako ima quantity onda konvertujemo sa + u number
       });
-    console.log(ingredients);
+
+    const recipe = {
+      title: newRecipe.title,
+      source_url: newRecipe.sourceUrl,
+      image_url: newRecipe.image,
+      publisher: newRecipe.publisher,
+      cooking_time: +newRecipe.cookingTime,
+      servings: +newRecipe.servings,
+      ingredients,
+    };
+
+    console.log(recipe);
+    return;
+    const data = await AJAX(`${API_URL}?key=${KEY}`, recipe); //// saljemo data( post request) dadajemo novi unos svog recepta i saljemo ka api url uz svoj key generisan na forkify
+    state.recipe = createRecipeObject(data);
+
+    addBookmark(state.recipe);
   } catch (err) {
     throw err;
   }
