@@ -131,13 +131,14 @@ const controlAddRecipe = async function (newRecipe) {
 
     //render recipe
 
-    recepieView.render(model.state.recipe);
+    //recepieView.render(model.state.recipe);
 
     //succes message
-    addRecipeView.renderMessage();
+
+    console.log(addRecipeView.renderMessage);
     // render bookmark view
     bookmarksView.render(model.state.bookmarks);
-
+    addRecipeView.renderMessage();
     //change ID in url
 
     window.history.pushState(null, '', `#${model.state.recipe.id}`); //mijenjamo url bez da refreshujemo browser
@@ -146,6 +147,7 @@ const controlAddRecipe = async function (newRecipe) {
     /// close form window
     setTimeout(function () {
       addRecipeView.toggleWindow();
+      //location.reload();
     }, MODAL_CLOSE_SEC * 1000); ///*1000 pretvara broj nasih sekundi u milisekunde
   } catch (err) {
     console.log('14141' + err);
