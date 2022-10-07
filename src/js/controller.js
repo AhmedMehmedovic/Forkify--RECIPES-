@@ -113,6 +113,8 @@ const controlAddBookmark = function () {
   bookmarksView.render(model.state.bookmarks);
   bookmarksView.addHandlerDeleteBookmark(controlToggleBookmark);
 
+  //////OOOOO NASTAVITI OVDJE
+
   console.log(model.getSearchResultsPage());
 
   resultsView.render(model.getSearchResultsPage());
