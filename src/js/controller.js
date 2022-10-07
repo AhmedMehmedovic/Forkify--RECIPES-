@@ -63,6 +63,7 @@ const controlSearchResults = async function () {
     //   console.log(model.state.search.results);
     // rezultati prije paginacije za ucitavanje  resultsView.render(model.state.search.results);
     resultsView.render(model.getSearchResultsPage());
+    resultsView.addHandlerDeleteBookmark(controlToggleBookmark);
 
     // render initial pagination buttons
 
@@ -80,6 +81,7 @@ const controlPaginationaButtns = function (goToPage) {
   resultsView.render(model.getSearchResultsPage(goToPage));
 
   paginationView.render(model.state.search);
+  resultsView.addHandlerDeleteBookmark(controlToggleBookmark);
 
   // goto page broj stranice__>> console.log(goToPage);
 };
@@ -100,22 +102,40 @@ const controlServings = function (newServings) {
 const controlAddBookmark = function () {
   ////zelimo samo kada recept nije vec spremljen u bookmarked
   //console.log(model.state.recipe.bookmarked);
-
   /////1 add or remove bookmark
 
   if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
   else model.deleteBookmark(model.state.recipe.id);
   // console.log(model.state.recipe);
   ////2 update recipeView
-  recepieView.update(model.state.recipe);
 
   ////3 render bookmarks
   bookmarksView.render(model.state.bookmarks);
+  bookmarksView.addHandlerDeleteBookmark(controlToggleBookmark);
+
+  console.log(model.getSearchResultsPage());
+
+  resultsView.render(model.getSearchResultsPage());
+  resultsView.addHandlerDeleteBookmark(controlToggleBookmark);
+  recepieView.update(model.state.recipe);
 };
 
-////////////**************** */
+const controlToggleBookmark = function (recipe) {
+  if (!recipe.bookmarked) model.addBookmark(recipe, true);
+  else model.deleteBookmark(recipe.id);
+
+  bookmarksView.render(model.state.bookmarks);
+  bookmarksView.addHandlerDeleteBookmark(controlToggleBookmark);
+
+  resultsView.render(model.getSearchResultsPage());
+  resultsView.addHandlerDeleteBookmark(controlToggleBookmark);
+
+  recepieView.update(model.state.recipe);
+};
+
 const controlBookmarks = function () {
   bookmarksView.render(model.state.bookmarks);
+  bookmarksView.addHandlerDeleteBookmark(controlToggleBookmark);
 };
 
 ///////////********kontroler za primanje novi podataka od unosa novog recepta */
@@ -161,12 +181,13 @@ const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
 
   recepieView.addHandlerRender(controlRecipes);
+
   recepieView.addHandlerUpdateServings(controlServings);
   recepieView.addHandlerAddBookmark(controlAddBookmark);
+
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
   addRecipeView.addHandlerUpload(controlAddRecipe);
-
   //// ucitavamo ali jos uvijek nije stigao odgovor ucitavanja recepata async await
   // controlServings();
 };

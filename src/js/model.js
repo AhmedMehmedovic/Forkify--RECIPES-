@@ -55,11 +55,16 @@ export const loadSearchResults = async function (query) {
     const data = await AJAX(`${API_URL}?search=${query}&key=${KEY}`); //// ?key=${KEY} dodajemo vlastiti kljuc u api
     //  console.log(data);
     state.search.results = data.data.recipes.map(rec => {
+      if (state.bookmarks.some(bookmark => bookmark.id === rec.id))
+        rec.bookmarked = true;
+      else rec.bookmarked = false;
+
       return {
         id: rec.id,
         title: rec.title,
         publisher: rec.publisher,
         image: rec.image_url,
+        bookmarked: rec.bookmarked,
         ...(rec.key && { key: rec.key }),
       };
     });
@@ -101,19 +106,32 @@ const storingBookmarks = function () {
 };
 
 ///**********///// */
-export const addBookmark = function (recipe) {
+export const addBookmark = function (recipe, bookmark = true) {
   // dodavanje recepata u array bookmark
-  state.bookmarks.push(recipe);
+  if (bookmark) {
+    recipe.bookmarked = true;
+  }
+
+  const indexBookmark = state.bookmarks.findIndex(el => el.id === recipe.id);
+  if (indexBookmark > -1) {
+    state.bookmarks[indexBookmark].bookmarked = recipe.bookmarked;
+  } else {
+    state.bookmarks.push(recipe);
+  }
 
   ////oznacavanje trenutnog recepta u bookmark
   if (recipe.id === state.recipe.id) state.recipe.bookmarked = true; // ako je id recepta proslijedjenog jednak onom u aplikaciji trenutnom  onda  postavljamo state.recipe.bookmarked true
   storingBookmarks();
 };
 
-/////********************DELETE BOOKMARK */
+/////*********DELETE BOOKMARK */
 export const deleteBookmark = function (id) {
-  const index = state.bookmarks.findIndex(el => el.id === id);
-  state.bookmarks.splice(index, 1);
+  const indexBookmark = state.bookmarks.findIndex(el => el.id === id);
+  const indexResults = state.search.results.findIndex(el => el.id === id);
+  if (indexResults > -1) {
+    state.search.results[indexResults].bookmarked = false;
+  }
+  state.bookmarks.splice(indexBookmark, 1);
   ////brisanje trenutnog recepta iz bookmark
   if (id === state.recipe.id) state.recipe.bookmarked = false;
   storingBookmarks();
