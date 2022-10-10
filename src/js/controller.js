@@ -115,7 +115,9 @@ const controlAddBookmark = function () {
 
   //////OOOOO NASTAVITI OVDJE
 
-  console.log(model.getSearchResultsPage());
+  // console.log(model.getSearchResultsPage());
+  //console.log(model.state.recipe.bookmarked);
+  //model.state.recipe.bookmarked = true;
 
   resultsView.render(model.getSearchResultsPage());
   resultsView.addHandlerDeleteBookmark(controlToggleBookmark);
@@ -129,6 +131,7 @@ const controlToggleBookmark = function (recipe) {
   bookmarksView.render(model.state.bookmarks);
   bookmarksView.addHandlerDeleteBookmark(controlToggleBookmark);
 
+  //recipe.bookmarked = true;
   resultsView.render(model.getSearchResultsPage());
   resultsView.addHandlerDeleteBookmark(controlToggleBookmark);
 

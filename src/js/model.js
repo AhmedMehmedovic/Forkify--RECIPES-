@@ -119,6 +119,15 @@ export const addBookmark = function (recipe, bookmark = true) {
     state.bookmarks.push(recipe);
   }
 
+  /// ispravka za reakciju na dugme bookmark na recept updatuje i na listi search i na bookmark listi
+
+  const indexResults = state.search.results.findIndex(
+    el => el.id === recipe.id
+  );
+  if (indexResults > -1) {
+    state.search.results[indexResults].bookmarked = recipe.bookmarked;
+  }
+
   ////oznacavanje trenutnog recepta u bookmark
   if (recipe.id === state.recipe.id) state.recipe.bookmarked = true; // ako je id recepta proslijedjenog jednak onom u aplikaciji trenutnom  onda  postavljamo state.recipe.bookmarked true
   storingBookmarks();
