@@ -21,8 +21,9 @@ export default class View {
   }
 
   ////////////************************* */
-  _clear() {
-    this._parrentElement.innerHTML = ''; ///prazni innerHtml
+  _clear(parrentElement = this._parrentElement) {
+    // console.log(this._parrentElement);
+    parrentElement.innerHTML = ''; ///prazni innerHtml
   }
 
   ////////////************************* */
@@ -86,7 +87,9 @@ export default class View {
       </div>
       <p>${message}</p>
     </div>`;
+
     this._clear();
+
     this._parrentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
@@ -101,6 +104,8 @@ export default class View {
       </div>
       <p>${message}</p>
     </div>`;
+    //  debugger;
+
     this._clear();
     this._parrentElement.insertAdjacentHTML('afterbegin', markup);
   }
