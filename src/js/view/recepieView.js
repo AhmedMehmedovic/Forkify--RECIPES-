@@ -23,7 +23,7 @@ class RecipeView extends View {
       if (!btn) return;
       const { updateTo } = btn.dataset; ///uz + pretvaramo u int
 
-      console.log(updateTo);
+      //console.log(updateTo);
 
       if (+updateTo > 0) handler(+updateTo);
     });

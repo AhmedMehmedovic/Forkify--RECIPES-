@@ -9,7 +9,7 @@ import addRecipeView from './view/addRecipeView.js';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import recepieView from './view/recepieView.js';
-import { async } from 'regenerator-runtime';
+
 import searchView from './view/searchView';
 
 //iz parcela dolazi ovo
@@ -155,12 +155,9 @@ const controlAddRecipe = async function (newRecipe) {
     //  console.log(model.state.recipe); //308 lekc
 
     //render recipe
-
     //recepieView.render(model.state.recipe);
-
     //succes message
-
-    console.log(addRecipeView.renderMessage);
+    //console.log(addRecipeView.renderMessage);
     // render bookmark view
     bookmarksView.render(model.state.bookmarks);
     addRecipeView.renderMessage();

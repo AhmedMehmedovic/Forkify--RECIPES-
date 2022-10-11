@@ -1,8 +1,5 @@
 import View from './view';
 import previewView from './previewView';
-import icons from 'url:../../img/icons.svg';
-
-import * as model from '../model.js';
 
 export default class listRecepiesView extends View {
   addHandlerDeleteBookmark(handler) {
