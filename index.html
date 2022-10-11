@@ -11,6 +11,7 @@
     <link rel="shortcut icon" href="src/img/favicon.png" type="image/x-icon" />
 
     <link rel="stylesheet" href="src/sass/main.scss" />
+
     <script type="module" src="src/js/controller.js"></script>
 
     <title>Pronađi recept</title>
@@ -19,18 +20,47 @@
   <body>
     <div class="container">
       <header class="header">
-        <img src="src/img/logo1.jpg" alt="Logo" class="header__logo" />
+        <img
+          src="src/img/favicon.png"
+          style="width: 200px; height: 100px; padding: 5px"
+          alt="Logo"
+          class="header__logo"
+        />
+        <div class="choose-search">
+          <button class="btn-check" type="button">FILTER</button>
+          <div class="dropdown1 hidden">
+            <form class="dropdown__menu">
+              <input
+                type="checkbox"
+                name="RECEPIES"
+                value="RECEPIES"
+                id="RECEPIES"
+                data-name="recepies"
+              />
+              <label for="RECEPIES">RECEPIES</label>
+
+              <input
+                type="checkbox"
+                data-name="hotels"
+                name="HOTELS"
+                value="HOTELS"
+                id="HOTELS"
+              />
+              <label for="HOTELS">HOTELS</label>
+            </form>
+          </div>
+        </div>
         <form class="search">
           <input
             type="text"
             class="search__field"
-            placeholder="Traži preko 1,000,000 recepata..."
+            placeholder="Find youre favorite recipe..."
           />
           <button class="btn search__btn">
             <svg class="search__icon">
               <use href="src/img/icons.svg#icon-search"></use>
             </svg>
-            <span>Pretraži</span>
+            <span>FIND</span>
           </button>
         </form>
 
@@ -41,7 +71,7 @@
                 <svg class="nav__icon">
                   <use href="src/img/icons.svg#icon-edit"></use>
                 </svg>
-                <span>Dodaj recept</span>
+                <span>ADD RECIPE</span>
               </button>
             </li>
             <li class="nav__item">
@@ -49,7 +79,7 @@
                 <svg class="nav__icon">
                   <use href="src/img/icons.svg#icon-bookmark"></use>
                 </svg>
-                <span>Spremljeni recepti</span>
+                <span>BOOKMARKED RECIPE</span>
               </button>
               <div class="bookmarks">
                 <ul class="bookmarks__list">
@@ -133,7 +163,7 @@
             >Ahmed Mehmedović</a
           >
           <br />
-          Izrada sajta prilikom edukacije i vježbe.
+          Making app during education.
         </p>
       </div>
 
@@ -144,7 +174,7 @@
               <use href="src/img/icons.svg#icon-smile"></use>
             </svg>
           </div>
-          <p>Pronađite svoj omiljeni recept i uživajte u kuhanju !</p>
+          <p>Find youre favorite meal and enjoy in cooking !</p>
         </div>
 
         <!-- <div class="spinner">

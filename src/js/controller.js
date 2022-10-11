@@ -1,4 +1,5 @@
 import * as model from './model.js';
+
 import { MODAL_CLOSE_SEC, RESULT_PER_PAGE } from './config.js';
 import RecipeView from './view/recepieView.js';
 import resultsView from './view/resultsView.js';
@@ -11,6 +12,7 @@ import 'regenerator-runtime/runtime';
 import recepieView from './view/recepieView.js';
 import { async } from 'regenerator-runtime';
 import searchView from './view/searchView';
+import checkBoxView from './view/checkBoxView.js';
 
 //iz parcela dolazi ovo
 // if (module.hot) {
@@ -182,6 +184,13 @@ const controlAddRecipe = async function (newRecipe) {
   ///Upload novi recipe data
 };
 
+const btnFilter = function () {
+  checkBoxView.toggle(checkBoxView._dropmenu);
+
+  console.log(checkBoxView._hotelsCheck);
+  //console.log(checkBoxView._recepiesCheck);
+};
+
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
 
@@ -193,6 +202,12 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
   addRecipeView.addHandlerUpload(controlAddRecipe);
+  checkBoxView.addHandlerFilter(btnFilter);
+  // checkBoxView.addHandlerCheck(
+  //   checkBoxView._recepiesCheck,
+  //   checkBoxView._hotelsCheck
+  // );
+
   //// ucitavamo ali jos uvijek nije stigao odgovor ucitavanja recepata async await
   // controlServings();
 };
