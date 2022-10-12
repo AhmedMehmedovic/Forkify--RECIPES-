@@ -5,6 +5,7 @@ import resultsView from './view/resultsView.js';
 import paginationView from './view/paginationView.js';
 import bookmarksView from './view/bookmarksView.js';
 import addRecipeView from './view/addRecipeView.js';
+import addHotelView from './view/addHotelView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -179,6 +180,11 @@ const controlAddRecipe = async function (newRecipe) {
   ///Upload novi recipe data
 };
 
+/// control add hotel handler
+
+const controlAddHotel = function () {
+  console.log('ds');
+};
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
 
@@ -190,6 +196,7 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
   addRecipeView.addHandlerUpload(controlAddRecipe);
+  addHotelView.addHandlerAddhotel(controlAddHotel);
   //// ucitavamo ali jos uvijek nije stigao odgovor ucitavanja recepata async await
   // controlServings();
 };
