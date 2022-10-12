@@ -19,9 +19,6 @@
   align-items: center;
   padding-left: 3rem;
   transition: all 0.3s;
-  height: 7rem;
-  width: 67rem;
-  justify-content: space-around;
 
   &:focus-within {
     transform: translateY(-2px);

@@ -1,6 +1,6 @@
 %btn {
   background-image: $gradient;
-  border-radius: 10rem 0 5rem 0;
+  border-radius: 10rem;
   border: none;
   text-transform: uppercase;
   color: #fff;
@@ -19,44 +19,6 @@
 
   & > *:first-child {
     margin-right: 1rem;
-  }
-}
-.choose-search {
-  display: flex;
-  width: 16rem;
-  height: 15rem;
-  flex-direction: column;
-  justify-content: flex-start;
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-
-  //margin-top: 6rem;
-
-  .btn-check {
-    width: 15rem;
-    height: 5rem;
-    // border-radius: 10rem 10rem 0 0;
-    //padding-top: 5px;
-    margin-top: 1.6rem;
-    background-image: $gradient2;
-    border-radius: 0 0rem 5rem 5rem;
-    border: none;
-    text-transform: uppercase;
-    color: #fff;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .dropdown1 {
-    height: 6rem;
-    width: 12rem;
-    font-size: large;
-    font-weight: bold;
-
-    ul li {
-      list-style-type: none;
-      font-size: initial;
-    }
   }
 }
 
