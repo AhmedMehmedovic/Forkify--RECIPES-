@@ -43,7 +43,7 @@ const controlRecipes = async function () {
     // controlServings();
   } catch (err) {
     recepieView.renderError();
-    console.log(err);
+    //console.log(err);
   }
 };
 
@@ -69,7 +69,7 @@ const controlSearchResults = async function () {
 
     paginationView.render(model.state.search);
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 };
 
@@ -172,7 +172,7 @@ const controlAddRecipe = async function (newRecipe) {
       //location.reload();
     }, MODAL_CLOSE_SEC * 1000); ///*1000 pretvara broj nasih sekundi u milisekunde
   } catch (err) {
-    console.log('14141' + err);
+    //console.log('14141' + err);
     addRecipeView.renderError(err.message);
   }
   // console.log(newRecipe);

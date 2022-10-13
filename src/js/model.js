@@ -41,7 +41,7 @@ export const loadRecipe = async function (id) {
     // console.log(state.recipe);
   } catch (err) {
     //temporary error handling
-    console.error(`${err} ******`);
+    // console.error(`${err} ******`);
 
     throw err;
   }
@@ -70,7 +70,7 @@ export const loadSearchResults = async function (query) {
 
     state.search.page = 1; ///restartujemo broj stranice koja se prikazuje prilikom svake pretrage (bug) postavljamo stranicu ponovo na 1
   } catch (err) {
-    console.error(`${err}`);
+    // console.error(`${err}`);
   }
 };
 
