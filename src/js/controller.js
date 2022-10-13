@@ -12,6 +12,7 @@ import 'regenerator-runtime/runtime';
 import recepieView from './view/recepieView.js';
 
 import searchView from './view/searchView';
+import View from './view/view.js';
 
 //iz parcela dolazi ovo
 // if (module.hot) {
@@ -182,8 +183,8 @@ const controlAddRecipe = async function (newRecipe) {
 
 /// control add hotel handler
 
-const controlAddHotel = function () {
-  console.log('ds');
+const controlWindowViewForHotel = function () {
+  addHotelView.showWindow(addHotelView._addHotelWindow, addHotelView._overlay);
 };
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
@@ -196,7 +197,14 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
   addRecipeView.addHandlerUpload(controlAddRecipe);
-  addHotelView.addHandlerAddhotel(controlAddHotel);
+  addHotelView.clickElementHandler(
+    addHotelView._btnAddHotel,
+    controlWindowViewForHotel
+  );
+  addHotelView.clickElementHandler(
+    addHotelView._btnClose,
+    controlWindowViewForHotel
+  );
   //// ucitavamo ali jos uvijek nije stigao odgovor ucitavanja recepata async await
   // controlServings();
 };
