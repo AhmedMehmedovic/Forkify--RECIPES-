@@ -30,7 +30,7 @@ const createRecipeObject = function (data) {
 
 export const loadRecipe = async function (id) {
   try {
-    const data = await AJAX(`${API_URL}${id}?key=${KEY}`);
+    const data = await AJAX(`${id}?key=${KEY}`);
 
     state.recipe = createRecipeObject(data);
     ///zapamti fill bookmark prilikom ponovnog rendanja
@@ -51,7 +51,7 @@ export const loadSearchResults = async function (query) {
   try {
     //console.log(query);
     state.search.query = query;
-    const data = await AJAX(`${API_URL}?search=${query}&key=${KEY}`); //// ?key=${KEY} dodajemo vlastiti kljuc u api
+    const data = await AJAX(`?search=${query}&key=${KEY}`); //// ?key=${KEY} dodajemo vlastiti kljuc u api
     //  console.log(data);
     state.search.results = data.data.recipes.map(rec => {
       if (state.bookmarks.some(bookmark => bookmark.id === rec.id))
@@ -187,7 +187,7 @@ export const uploadRecipe = async function (newRecipe) {
 
     //console.log(recipe);
 
-    const data = await AJAX(`${API_URL}?key=${KEY}`, recipe); //// saljemo data( post request) dadajemo novi unos svog recepta i saljemo ka api url uz svoj key generisan na forkify
+    const data = await AJAX(`?key=${KEY}`, recipe); //// saljemo data( post request) dadajemo novi unos svog recepta i saljemo ka api url uz svoj key generisan na forkify
     state.recipe = createRecipeObject(data);
     // console.log(state.recipe);
     addBookmark(state.recipe);
