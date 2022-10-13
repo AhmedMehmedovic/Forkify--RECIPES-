@@ -5,6 +5,7 @@ import resultsView from './view/resultsView.js';
 import paginationView from './view/paginationView.js';
 import bookmarksView from './view/bookmarksView.js';
 import addRecipeView from './view/addRecipeView.js';
+import DropMenu from './view/dropMenuView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -181,6 +182,25 @@ const controlAddRecipe = async function (newRecipe) {
   // console.log(newRecipe);
   ///Upload novi recipe data
 };
+const showCloseDropmenu = function () {
+  DropMenu.toggle(DropMenu._dropmenu);
+
+  //console.log(checkBoxView._recepiesCheck);
+};
+
+const controlRadioBtns = function () {
+  DropMenu.toggle(DropMenu._iconHotel);
+  DropMenu.toggle(DropMenu._iconRecepies);
+
+  if (DropMenu._iconHotel.classList.contains('hidden')) {
+    DropMenu._searchFild.placeholder = 'Search recepies!!';
+    showCloseDropmenu();
+  }
+  if (DropMenu._iconRecepies.classList.contains('hidden')) {
+    DropMenu._searchFild.placeholder = 'Search hotels!!';
+    showCloseDropmenu();
+  }
+};
 
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
@@ -193,6 +213,10 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
   addRecipeView.addHandlerUpload(controlAddRecipe);
+  DropMenu.addHandlerFilter(showCloseDropmenu);
+  DropMenu.onRadioChangeHandler(DropMenu._recepiesCheck, controlRadioBtns);
+  DropMenu.onRadioChangeHandler(DropMenu._hotelsCheck, controlRadioBtns);
+  DropMenu.stopSubmitDropBtn();
   //// ucitavamo ali jos uvijek nije stigao odgovor ucitavanja recepata async await
   // controlServings();
 };
