@@ -1,13 +1,15 @@
 import * as model from './model.js';
+import { MODAL_CLOSE_SEC, RESULT_PER_PAGE } from './config.js';
 import RecipeView from './view/recepieView.js';
 import resultsView from './view/resultsView.js';
 import paginationView from './view/paginationView.js';
 import bookmarksView from './view/bookmarksView.js';
+import addRecipeView from './view/addRecipeView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import recepieView from './view/recepieView.js';
-import { async } from 'regenerator-runtime';
+
 import searchView from './view/searchView';
 
 //iz parcela dolazi ovo
@@ -31,7 +33,7 @@ const controlRecipes = async function () {
     //iz modela
     await model.loadRecipe(id);
 
-    const { recipe } = model.state;
+    //const { recipe } = model.state;
 
     // Rendering recepi
     //deklarisanje recepi view iz tog fajla
@@ -41,7 +43,7 @@ const controlRecipes = async function () {
     // controlServings();
   } catch (err) {
     recepieView.renderError();
-    console.log(err);
+    //console.log(err);
   }
 };
 
@@ -49,11 +51,10 @@ const controlRecipes = async function () {
 
 const controlSearchResults = async function () {
   try {
-    resultsView.renderSpiner();
-
     const query = searchView.getQuery();
 
     if (!query) return;
+    resultsView.renderSpiner();
 
     await model.loadSearchResults(query);
 
@@ -62,12 +63,13 @@ const controlSearchResults = async function () {
     //   console.log(model.state.search.results);
     // rezultati prije paginacije za ucitavanje  resultsView.render(model.state.search.results);
     resultsView.render(model.getSearchResultsPage());
+    resultsView.addHandlerDeleteBookmark(controlToggleBookmark);
 
     // render initial pagination buttons
 
     paginationView.render(model.state.search);
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 };
 
@@ -79,6 +81,7 @@ const controlPaginationaButtns = function (goToPage) {
   resultsView.render(model.getSearchResultsPage(goToPage));
 
   paginationView.render(model.state.search);
+  resultsView.addHandlerDeleteBookmark(controlToggleBookmark);
 
   // goto page broj stranice__>> console.log(goToPage);
 };
@@ -99,31 +102,94 @@ const controlServings = function (newServings) {
 const controlAddBookmark = function () {
   ////zelimo samo kada recept nije vec spremljen u bookmarked
   //console.log(model.state.recipe.bookmarked);
-
   /////1 add or remove bookmark
 
   if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
   else model.deleteBookmark(model.state.recipe.id);
   // console.log(model.state.recipe);
   ////2 update recipeView
-  recepieView.update(model.state.recipe);
 
   ////3 render bookmarks
   bookmarksView.render(model.state.bookmarks);
+  bookmarksView.addHandlerDeleteBookmark(controlToggleBookmark);
+
+  //////OOOOO NASTAVITI OVDJE
+
+  // console.log(model.getSearchResultsPage());
+  //console.log(model.state.recipe.bookmarked);
+  //model.state.recipe.bookmarked = true;
+
+  resultsView.render(model.getSearchResultsPage());
+  resultsView.addHandlerDeleteBookmark(controlToggleBookmark);
+  recepieView.update(model.state.recipe);
 };
 
-////////////**************** */
+const controlToggleBookmark = function (recipe) {
+  if (!recipe.bookmarked) model.addBookmark(recipe, true);
+  else model.deleteBookmark(recipe.id);
+
+  bookmarksView.render(model.state.bookmarks);
+  bookmarksView.addHandlerDeleteBookmark(controlToggleBookmark);
+
+  //recipe.bookmarked = true;
+  resultsView.render(model.getSearchResultsPage());
+  resultsView.addHandlerDeleteBookmark(controlToggleBookmark);
+
+  recepieView.update(model.state.recipe);
+};
+
 const controlBookmarks = function () {
   bookmarksView.render(model.state.bookmarks);
+  bookmarksView.addHandlerDeleteBookmark(controlToggleBookmark);
 };
+
+///////////********kontroler za primanje novi podataka od unosa novog recepta */
+/// iz model.js uploadRecipe je async funcija i vraca promise, da bi rendali gresku cekamo da se vrati promis zato dodajemo await u try bloku
+const controlAddRecipe = async function (newRecipe) {
+  try {
+    //show loading spiner
+    addRecipeView.renderSpiner();
+
+    // upload the new recipe in data
+    await model.uploadRecipe(newRecipe);
+    //  console.log(model.state.recipe); //308 lekc
+
+    //render recipe
+    //recepieView.render(model.state.recipe);
+    //succes message
+    //console.log(addRecipeView.renderMessage);
+    // render bookmark view
+    bookmarksView.render(model.state.bookmarks);
+    addRecipeView.renderMessage();
+    //change ID in url
+
+    window.history.pushState(null, '', `#${model.state.recipe.id}`); //mijenjamo url bez da refreshujemo browser
+    // window.history.back() klikom u browseru za nazad automatski idemo nazad
+
+    /// close form window
+    setTimeout(function () {
+      addRecipeView.toggleWindow();
+      //location.reload();
+    }, MODAL_CLOSE_SEC * 1000); ///*1000 pretvara broj nasih sekundi u milisekunde
+  } catch (err) {
+    //console.log('14141' + err);
+    addRecipeView.renderError(err.message);
+  }
+  // console.log(newRecipe);
+  ///Upload novi recipe data
+};
+
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
+
   recepieView.addHandlerRender(controlRecipes);
+
   recepieView.addHandlerUpdateServings(controlServings);
   recepieView.addHandlerAddBookmark(controlAddBookmark);
+
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
-
+  addRecipeView.addHandlerUpload(controlAddRecipe);
   //// ucitavamo ali jos uvijek nije stigao odgovor ucitavanja recepata async await
   // controlServings();
 };

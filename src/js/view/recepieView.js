@@ -5,7 +5,6 @@ import { Fractional } from '../../../node_modules/fractional';
 
 class RecipeView extends View {
   _parrentElement = document.querySelector('.recipe');
-
   _errorMessage = 'We could not find that recipe. Please try another one!';
   _message = '';
 
@@ -24,7 +23,7 @@ class RecipeView extends View {
       if (!btn) return;
       const { updateTo } = btn.dataset; ///uz + pretvaramo u int
 
-      console.log(updateTo);
+      //console.log(updateTo);
 
       if (+updateTo > 0) handler(+updateTo);
     });
@@ -35,11 +34,13 @@ class RecipeView extends View {
   addHandlerAddBookmark(handler) {
     this._parrentElement.addEventListener('click', function (e) {
       const btnBookmark = e.target.closest('.btn--bookmark');
+
       if (!btnBookmark) return;
 
       handler();
     });
   }
+
   ////////////**************************** */
   _generateMarkup() {
     // generisanje html recepata console.log(this.data);
@@ -90,9 +91,14 @@ class RecipeView extends View {
               </button>
             </div>
           </div>
-           <div class="recipe__user-generated">
+          <div class="recipe__user-generated ${
+            this._data.key ? '' : 'hidden'
+          }"> 
           
-           </div>
+          <svg>
+            <use href="${icons}#icon-user"></use>
+          </svg>
+        </div>
           <button class="btn--round btn--bookmark">
             <svg class="">
               <use href="${icons}#icon-bookmark${

@@ -1,6 +1,6 @@
-import { async } from 'regenerator-runtime';
-import { API_URL, RESULT_PER_PAGE } from './config';
-import { getJSON } from './helpers';
+import { API_URL, RESULT_PER_PAGE, KEY } from './config';
+//import { getJSON, sendJSON } from './helpers'; /// zamijenjeno sa jednom funkcijom AJAX
+import { AJAX } from './helpers';
 
 export const state = {
   recipe: {},
@@ -13,22 +13,26 @@ export const state = {
   bookmarks: [],
 };
 
+const createRecipeObject = function (data) {
+  const { recipe } = data.data;
+  return {
+    id: recipe.id,
+    title: recipe.title,
+    publisher: recipe.publisher,
+    sourceUrl: recipe.source_url,
+    image: recipe.image_url,
+    servings: recipe.servings,
+    cookingTime: recipe.cooking_time,
+    ingredients: recipe.ingredients, ///informacija o sastojcima
+    ...(recipe.key && { key: recipe.key }), /// ukoliko ne postoji recipe.key, nece se desiti nista, medjutim ukoliko postoji onda ce se spremiti kao da je napisano 'key: recipe.key ' (zaduzen spread operatotr ...)
+  };
+};
+
 export const loadRecipe = async function (id) {
   try {
-    const data = await getJSON(`${API_URL}${id}`);
+    const data = await AJAX(`${id}?key=${KEY}`);
 
-    const { recipe } = data.data;
-    state.recipe = {
-      id: recipe.id,
-      title: recipe.title,
-      publisher: recipe.publisher,
-      sourceUrl: recipe.source_url,
-      image: recipe.image_url,
-      servings: recipe.servings,
-      cookingTime: recipe.cooking_time,
-      ingredients: recipe.ingredients, ///informacija o sastojcima
-    };
-
+    state.recipe = createRecipeObject(data);
     ///zapamti fill bookmark prilikom ponovnog rendanja
     if (state.bookmarks.some(bookmark => bookmark.id === id))
       state.recipe.bookmarked = true;
@@ -37,7 +41,7 @@ export const loadRecipe = async function (id) {
     // console.log(state.recipe);
   } catch (err) {
     //temporary error handling
-    console.log(`${err} ******`);
+    // console.error(`${err} ******`);
 
     throw err;
   }
@@ -45,20 +49,28 @@ export const loadRecipe = async function (id) {
 
 export const loadSearchResults = async function (query) {
   try {
+    //console.log(query);
     state.search.query = query;
-    const data = await getJSON(`${API_URL}?search=${query}`);
-
+    const data = await AJAX(`?search=${query}&key=${KEY}`); //// ?key=${KEY} dodajemo vlastiti kljuc u api
+    //  console.log(data);
     state.search.results = data.data.recipes.map(rec => {
+      if (state.bookmarks.some(bookmark => bookmark.id === rec.id))
+        rec.bookmarked = true;
+      else rec.bookmarked = false;
+
       return {
         id: rec.id,
         title: rec.title,
         publisher: rec.publisher,
         image: rec.image_url,
+        bookmarked: rec.bookmarked,
+        ...(rec.key && { key: rec.key }),
       };
     });
+
     state.search.page = 1; ///restartujemo broj stranice koja se prikazuje prilikom svake pretrage (bug) postavljamo stranicu ponovo na 1
   } catch (err) {
-    console.log(`${err}`);
+    // console.error(`${err}`);
   }
 };
 
@@ -91,19 +103,43 @@ export const updateServings = function (newServings) {
 const storingBookmarks = function () {
   localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
 };
-export const addBookmark = function (recipe) {
+
+///**********///// */
+export const addBookmark = function (recipe, bookmark = true) {
   // dodavanje recepata u array bookmark
-  state.bookmarks.push(recipe);
+  if (bookmark) {
+    recipe.bookmarked = true;
+  }
+
+  const indexBookmark = state.bookmarks.findIndex(el => el.id === recipe.id);
+  if (indexBookmark > -1) {
+    state.bookmarks[indexBookmark].bookmarked = recipe.bookmarked;
+  } else {
+    state.bookmarks.push(recipe);
+  }
+
+  /// ispravka za reakciju na dugme bookmark na recept updatuje i na listi search i na bookmark listi
+
+  const indexResults = state.search.results.findIndex(
+    el => el.id === recipe.id
+  );
+  if (indexResults > -1) {
+    state.search.results[indexResults].bookmarked = recipe.bookmarked;
+  }
 
   ////oznacavanje trenutnog recepta u bookmark
   if (recipe.id === state.recipe.id) state.recipe.bookmarked = true; // ako je id recepta proslijedjenog jednak onom u aplikaciji trenutnom  onda  postavljamo state.recipe.bookmarked true
   storingBookmarks();
 };
 
-/////********************DELETE BOOKMARK */
+/////*********DELETE BOOKMARK */
 export const deleteBookmark = function (id) {
-  const index = state.bookmarks.findIndex(el => el.id === id);
-  state.bookmarks.splice(index, 1);
+  const indexBookmark = state.bookmarks.findIndex(el => el.id === id);
+  const indexResults = state.search.results.findIndex(el => el.id === id);
+  if (indexResults > -1) {
+    state.search.results[indexResults].bookmarked = false;
+  }
+  state.bookmarks.splice(indexBookmark, 1);
   ////brisanje trenutnog recepta iz bookmark
   if (id === state.recipe.id) state.recipe.bookmarked = false;
   storingBookmarks();
@@ -116,7 +152,46 @@ const init = function () {
 
 init();
 // console.log(state.bookmarks);
-const clearBookmarks = function () {
-  localStorage.clear('bookmarks');
-};
+// const clearBookmarks = function () {
+//   localStorage.clear('bookmarks');
+// };
 //clearBookmarks();
+
+export const uploadRecipe = async function (newRecipe) {
+  try {
+    const ingredients = Object.entries(newRecipe)
+      .filter(entry => entry[0].startsWith('ingredient') && entry[1] !== '')
+      .map(ing => {
+        const ingArray = ing[1].split(',').map(element => element.trim());
+        // const ingArray = ing[1].replaceAll(' ', '').split(',');
+
+        if (ingArray.length !== 3)
+          throw new Error(
+            'Wrong ingridient format. Please use the correct format.'
+          );
+
+        const [quantity, unit, description] = ingArray;
+
+        return { quantity: quantity ? +quantity : null, unit, description }; //ako ima quantity onda konvertujemo sa + u number
+      });
+
+    const recipe = {
+      title: newRecipe.title,
+      source_url: newRecipe.sourceUrl,
+      image_url: newRecipe.image,
+      publisher: newRecipe.publisher,
+      cooking_time: +newRecipe.cookingTime,
+      servings: +newRecipe.servings,
+      ingredients,
+    };
+
+    //console.log(recipe);
+
+    const data = await AJAX(`?key=${KEY}`, recipe); //// saljemo data( post request) dadajemo novi unos svog recepta i saljemo ka api url uz svoj key generisan na forkify
+    state.recipe = createRecipeObject(data);
+    // console.log(state.recipe);
+    addBookmark(state.recipe);
+  } catch (err) {
+    throw err;
+  }
+};
