@@ -7,6 +7,7 @@ import bookmarksView from './view/bookmarksView.js';
 import addRecipeView from './view/addRecipeView.js';
 import addHotelView from './view/addHotelView.js';
 import rulesValidator from './rulesValidator.js';
+import DropMenu from './view/dropMenuView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -46,7 +47,7 @@ const controlRecipes = async function () {
     // controlServings();
   } catch (err) {
     recepieView.renderError();
-    console.log(err);
+    //console.log(err);
   }
 };
 
@@ -72,7 +73,7 @@ const controlSearchResults = async function () {
 
     paginationView.render(model.state.search);
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 };
 
@@ -173,11 +174,30 @@ const controlAddRecipe = async function (newRecipe) {
       //location.reload();
     }, MODAL_CLOSE_SEC * 1000); ///*1000 pretvara broj nasih sekundi u milisekunde
   } catch (err) {
-    console.log('14141' + err);
+    //console.log('14141' + err);
     addRecipeView.renderError(err.message);
   }
   // console.log(newRecipe);
   ///Upload novi recipe data
+};
+const showCloseDropmenu = function () {
+  DropMenu.toggle(DropMenu._dropmenu);
+
+  //console.log(checkBoxView._recepiesCheck);
+};
+
+const controlRadioBtns = function () {
+  DropMenu.toggle(DropMenu._iconHotel);
+  DropMenu.toggle(DropMenu._iconRecepies);
+
+  if (DropMenu._iconHotel.classList.contains('hidden')) {
+    DropMenu._searchFild.placeholder = 'Search recepies!!';
+    showCloseDropmenu();
+  }
+  if (DropMenu._iconRecepies.classList.contains('hidden')) {
+    DropMenu._searchFild.placeholder = 'Search hotels!!';
+    showCloseDropmenu();
+  }
 };
 
 /// control add hotel handler
@@ -230,6 +250,11 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
   addRecipeView.addHandlerUpload(controlAddRecipe);
+  DropMenu.addHandlerFilter(showCloseDropmenu);
+  DropMenu.onRadioChangeHandler(DropMenu._recepiesCheck, controlRadioBtns);
+  DropMenu.onRadioChangeHandler(DropMenu._hotelsCheck, controlRadioBtns);
+  DropMenu.stopSubmitDropBtn();
+  //// ucitavamo ali jos uvijek nije stigao odgovor ucitavanja recepata async await
   addHotelView.clickElementHandler(addHotelView._btnAddHotel, addModalHotel);
   addHotelView.clickElementHandler(addHotelView._btnClose, closeWindowHotel);
   addHotelView.addHotelData(controlHotelData);
