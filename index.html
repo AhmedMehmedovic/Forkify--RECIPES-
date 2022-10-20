@@ -345,31 +345,35 @@
     <div class="overlay-hotel hidden"></div>
     <div class="add-hotel-window hidden">
       <button class="btn--close-modal close-motal-hotel">&times;</button>
-      <div class="upload"></div>
-      <form class="upload">
-        <div class="upload__column">
+      <div class="upload uploadHotel"></div>
+      <form class="upload upload-hotel">
+        <div class="upload__column formHotel">
           <h3 class="upload__heading">Hotel data</h3>
           <label>Name of hotel</label>
-          <input value="hotel1" required name="title" type="text" />
+          <input value="" name="title" type="text" />
           <label>WEBSITE</label>
-          <input value="Website" required name="sourceUrl" type="text" />
+          <input value="" name="sourceUrl" type="text" />
           <label>Image URL</label>
-          <input value="image1" required name="image" type="text" />
+          <input value="" name="image" type="text" />
           <label>Address</label>
-          <input value="Industrial bb" required name="address" type="text" />
+          <input value="" name="address" type="text" />
           <label>Phone</label>
-          <input value="" required name="Phone number" type="phone" />
+          <input value="" name="Phone" type="phone" />
           <label>Email</label>
-          <input value="" required name="EMAIL" type="email" />
+          <input value="" name="Email" type="email" />
         </div>
-
-        <button class="btn upload__btn save-hotel">
+      </form>
+      <div class="buttons">
+        <button class="btn upload__btn save-hotel" type="submit">
           <svg>
             <use href="src/img/icons.svg#icon-upload-cloud"></use>
           </svg>
           <span>SAVE</span>
         </button>
-      </form>
+        <button class="btn button-reload hidden">
+          <span class="glyphicon glyphicon-refresh"></span> Refresh
+        </button>
+      </div>
     </div>
   </body>
 </html>

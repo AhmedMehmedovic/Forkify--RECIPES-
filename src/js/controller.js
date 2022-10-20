@@ -6,6 +6,7 @@ import paginationView from './view/paginationView.js';
 import bookmarksView from './view/bookmarksView.js';
 import addRecipeView from './view/addRecipeView.js';
 import addHotelView from './view/addHotelView.js';
+import rulesValidator from './rulesValidator.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -151,11 +152,9 @@ const controlAddRecipe = async function (newRecipe) {
   try {
     //show loading spiner
     addRecipeView.renderSpiner();
-
     // upload the new recipe in data
     await model.uploadRecipe(newRecipe);
     //  console.log(model.state.recipe); //308 lekc
-
     //render recipe
     //recepieView.render(model.state.recipe);
     //succes message
@@ -182,10 +181,44 @@ const controlAddRecipe = async function (newRecipe) {
 };
 
 /// control add hotel handler
+/////klik dodaj hotel modal
+const addModalHotel = function () {
+  addHotelView.showWindow(addHotelView._addHotelWindow, addHotelView._overlay);
 
-const controlWindowViewForHotel = function () {
+  _errorView = document.querySelector(
+    'body > div.add-hotel-window > form > div.error'
+  );
+  if (_errorView) {
+    _errorView.remove();
+  }
+  if (addHotelView._formHotelchildForm.classList.contains('hidden')) {
+    addHotelView._formHotelchildForm.classList.remove('hidden');
+    addHotelView._saveBtn.classList.remove('hidden');
+  }
+};
+////zatvori hotel modal
+const closeWindowHotel = function () {
   addHotelView.showWindow(addHotelView._addHotelWindow, addHotelView._overlay);
 };
+////***Upravljanje datom iz unosa modal hotel* */
+const controlHotelData = function (data) {
+  if (
+    addHotelView._hotelsLocalStorage.length <= 0 &&
+    localStorage.getItem('hotels') !== null
+  ) {
+    addHotelView._hotelsLocalStorage = JSON.parse(
+      localStorage.getItem('hotels')
+    );
+    let newAlldata = addHotelView._hotelsLocalStorage.concat(data);
+    model.storingLocalStorage('hotels', newAlldata);
+  }
+  addHotelView._hotelsLocalStorage.push(data);
+
+  model.storingLocalStorage('hotels', addHotelView._hotelsLocalStorage);
+
+  closeWindowHotel();
+};
+///*** */
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
 
@@ -197,15 +230,10 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
   addRecipeView.addHandlerUpload(controlAddRecipe);
-  addHotelView.clickElementHandler(
-    addHotelView._btnAddHotel,
-    controlWindowViewForHotel
-  );
-  addHotelView.clickElementHandler(
-    addHotelView._btnClose,
-    controlWindowViewForHotel
-  );
-  //// ucitavamo ali jos uvijek nije stigao odgovor ucitavanja recepata async await
+  addHotelView.clickElementHandler(addHotelView._btnAddHotel, addModalHotel);
+  addHotelView.clickElementHandler(addHotelView._btnClose, closeWindowHotel);
+  addHotelView.addHotelData(controlHotelData);
+
   // controlServings();
 };
 init();

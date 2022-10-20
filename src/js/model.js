@@ -100,8 +100,11 @@ export const updateServings = function (newServings) {
 };
 
 //// spremanje cekiranih recepata (bookmark) u localstorage
-const storingBookmarks = function () {
-  localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+export const storingLocalStorage = function (
+  keyName = 'bookmarks',
+  data = state.bookmarks
+) {
+  localStorage.setItem(keyName, JSON.stringify(data));
 };
 
 ///**********///// */
@@ -129,7 +132,7 @@ export const addBookmark = function (recipe, bookmark = true) {
 
   ////oznacavanje trenutnog recepta u bookmark
   if (recipe.id === state.recipe.id) state.recipe.bookmarked = true; // ako je id recepta proslijedjenog jednak onom u aplikaciji trenutnom  onda  postavljamo state.recipe.bookmarked true
-  storingBookmarks();
+  storingLocalStorage();
 };
 
 /////*********DELETE BOOKMARK */
@@ -142,7 +145,7 @@ export const deleteBookmark = function (id) {
   state.bookmarks.splice(indexBookmark, 1);
   ////brisanje trenutnog recepta iz bookmark
   if (id === state.recipe.id) state.recipe.bookmarked = false;
-  storingBookmarks();
+  storingLocalStorage();
 };
 
 const init = function () {

@@ -78,24 +78,27 @@ export default class View {
 
   ////////////************************* */
 
-  renderError(message = this._errorMessage) {
+  renderError(
+    message = this._errorMessage,
+    parentEl = this._parrentElement,
+    position = 'afterbegin'
+  ) {
     const markup = `<div class="error">
       <div>
         <svg>
           <use href="${icons}#icon-alert-triangle"></use>
         </svg>
       </div>
-      <p>${message}</p>
+      <p>${message}</p> 
     </div>`;
 
     this._clear();
-
-    this._parrentElement.insertAdjacentHTML('afterbegin', markup);
+    parentEl.insertAdjacentHTML(position, markup);
   }
 
   ////////////************************* */
 
-  renderMessage(message = this._message) {
+  renderMessage(message = this._message, parentEl = this._parrentElement) {
     const markup = `<div class="message">
       <div>
         <svg>
@@ -107,6 +110,6 @@ export default class View {
     //  debugger;
 
     this._clear();
-    this._parrentElement.insertAdjacentHTML('afterbegin', markup);
+    parentEl.insertAdjacentHTML('afterbegin', markup);
   }
 }
