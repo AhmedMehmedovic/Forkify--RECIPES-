@@ -23,7 +23,6 @@ class DropMenu extends View {
       e.preventDefault();
 
       e.stopPropagation();
-      console.log(e);
     });
   }
 

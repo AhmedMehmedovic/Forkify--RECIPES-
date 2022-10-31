@@ -6,8 +6,32 @@ class PreviewView extends View {
 
   _generateMarkup() {
     const id = window.location.hash.slice(1);
+    const publisher =
+      this._data.type === 'recepie' ? this._data.publisher : this._data.email;
+    console.log();
+    const buttonBookmark =
+      this._data.type === 'recepie'
+        ? ` <button class="btn--inline btn--bookmark btn-delete-bookmark">
+    <svg class="">
+      <use href="${icons}#icon-bookmark${
+            this._data.bookmarked ? '-fill' : ''
+          }"></use>
+    </svg>
+  </button>`
+        : '';
+
+    const info =
+      this._data.type === 'recepie'
+        ? ''
+        : `<div class="preview__data">
+        <h4 class="preview__title">${this._data.phone}</h4>
+        <p class="preview__publisher">${this._data.sourceUrl}
+        </p>
+        
+      </div>`;
+    //console.log(this._data);
     return `
-    <li class="preview">
+    <li class="preview" data-type="${this._data.type}">
             <a class="preview__link ${
               this._data.id === id ? 'preview__link--active' : ''
             }" href="#${this._data.id}">
@@ -16,7 +40,7 @@ class PreviewView extends View {
               </figure>
               <div class="preview__data">
                 <h4 class="preview__title">${this._data.title}</h4>
-                <p class="preview__publisher">${this._data.publisher}</p>
+                <p class="preview__publisher">${publisher}</p>
                 
               </div>
               <div class="preview__user-generated ${
@@ -27,13 +51,8 @@ class PreviewView extends View {
             </svg>
         
       </div>
-              <button class="btn--inline btn--bookmark btn-delete-bookmark">
-              <svg class="">
-                <use href="${icons}#icon-bookmark${
-      this._data.bookmarked ? '-fill' : ''
-    }"></use>
-              </svg>
-            </button>
+              ${buttonBookmark}
+              ${info}
             </a>
           </li>
     `;

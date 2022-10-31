@@ -15,6 +15,7 @@ import recepieView from './view/recepieView.js';
 
 import searchView from './view/searchView';
 import View from './view/view.js';
+import ListHotel from './view/listHotelView.js';
 
 //iz parcela dolazi ovo
 // if (module.hot) {
@@ -57,10 +58,14 @@ const controlSearchResults = async function () {
   try {
     const query = searchView.getQuery();
 
+    const filterType = document.querySelector(
+      'input[type=radio][name="filter"]:checked'
+    ).value;
+
     if (!query) return;
     resultsView.renderSpiner();
 
-    await model.loadSearchResults(query);
+    await model.loadSearchResults(query, filterType);
 
     // Rendanje  rezultata rezultata
 
@@ -238,6 +243,10 @@ const controlHotelData = function (data) {
 
   closeWindowHotel();
 };
+
+const listHotel = function () {
+  return console.log();
+};
 ///*** */
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
@@ -258,6 +267,11 @@ const init = function () {
   addHotelView.clickElementHandler(addHotelView._btnAddHotel, addModalHotel);
   addHotelView.clickElementHandler(addHotelView._btnClose, closeWindowHotel);
   addHotelView.addHotelData(controlHotelData);
+  ListHotel.listHotel(listHotel);
+  //ListHotel.listHotel(listHotel);
+  //listHotel.listHotel(listHotel);
+
+  //listHotel.addListHotel(listHotel);
 
   // controlServings();
 };

@@ -43,7 +43,7 @@ export default class Rules {
   emailCheck(message = 'Email must be in correct format! ') {
     const validRgx =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (this.value == '' && !this.value.match(validRgx)) {
+    if (!this.value == '' && !this.value.match(validRgx)) {
       this._errorMessages.push(this.#messageMarkup(message));
     }
     return this;
@@ -53,15 +53,16 @@ export default class Rules {
     const validRgx =
       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
 
-    if (this.value == '' && !this.value.match(validRgx)) {
+    if (!this.value == '' && !this.value.match(validRgx)) {
       this._errorMessages.push(this.#messageMarkup(message));
     }
     return this;
   }
 
   checkPhone(message = 'Phone number is not in correct format! ') {
-    const validRgx = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;
-    if (this.value == '' && !this.value.match(validRgx)) {
+    const validRgx =
+      /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
+    if (!this.value == '' && !this.value.match(validRgx)) {
       this._errorMessages.push(this.#messageMarkup(message));
     }
     return this;

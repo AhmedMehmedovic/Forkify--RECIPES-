@@ -47,32 +47,77 @@ export const loadRecipe = async function (id) {
   }
 };
 
-export const loadSearchResults = async function (query) {
+export const loadSearchResults = async function (query, filterType = 1) {
   try {
     //console.log(query);
     state.search.query = query;
-    const data = await AJAX(`?search=${query}&key=${KEY}`); //// ?key=${KEY} dodajemo vlastiti kljuc u api
-    //  console.log(data);
-    state.search.results = data.data.recipes.map(rec => {
-      if (state.bookmarks.some(bookmark => bookmark.id === rec.id))
-        rec.bookmarked = true;
-      else rec.bookmarked = false;
+    if (filterType == 1) {
+      const data = await AJAX(`?search=${query}&key=${KEY}`); //// ?key=${KEY} dodajemo vlastiti kljuc u api
+      //  console.log(data);
+      state.search.results = data.data.recipes.map(rec => {
+        if (state.bookmarks.some(bookmark => bookmark.id === rec.id))
+          rec.bookmarked = true;
+        else rec.bookmarked = false;
 
-      return {
-        id: rec.id,
-        title: rec.title,
-        publisher: rec.publisher,
-        image: rec.image_url,
-        bookmarked: rec.bookmarked,
-        ...(rec.key && { key: rec.key }),
-      };
-    });
+        return {
+          type: 'recepie',
+          id: rec.id,
+          title: rec.title,
+          publisher: rec.publisher,
+          image: rec.image_url,
+          bookmarked: rec.bookmarked,
+          ...(rec.key && { key: rec.key }),
+        };
+      });
+    } else {
+      const data = JSON.parse(localStorage.getItem('hotels'));
+
+      const dataHotel = data.filter(element => element.title.includes(query));
+
+      const hotel = dataHotel[1];
+      //console.log(data); //// ?key=${KEY} dodajemo vlastiti kljuc u api
+
+      state.search.results = dataHotel.map(
+        hotel => ({
+          type: 'hotel',
+          id: hotel.id,
+          title: hotel.title,
+          publisher: '',
+          image: hotel.image,
+          bookmarked: false,
+          email: hotel.Email,
+          phone: hotel.Phone,
+          sourceUrl: hotel.sourceUrl,
+        })
+
+        //    {
+        //   if (state.bookmarks.some(bookmark => bookmark.title === hotel.title))
+        //     hotel.bookmarked = true;
+        //   else hotel.bookmarked = false;
+        // });
+      );
+      // console.log(state.search.results);
+      // state.search.results = [
+      //   {
+      //     type: 'hotel',
+      //     id: hotel.id,
+      //     title: hotel.title,
+      //     publisher: '',
+      //     image: hotel.image,
+      //     bookmarked: false,
+      //     email: hotel.Email,
+      //     phone: hotel.Phone,
+      //     sourceUrl: hotel.sourceUrl,
+      //   },
+      // ];
+    }
 
     state.search.page = 1; ///restartujemo broj stranice koja se prikazuje prilikom svake pretrage (bug) postavljamo stranicu ponovo na 1
   } catch (err) {
     // console.error(`${err}`);
   }
 };
+///////////*********/// */
 
 //paginacija
 export const getSearchResultsPage = function (page = state.search.page) {
