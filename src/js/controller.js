@@ -15,7 +15,6 @@ import recepieView from './view/recepieView.js';
 
 import searchView from './view/searchView';
 import View from './view/view.js';
-import ListHotel from './view/listHotelView.js';
 
 //iz parcela dolazi ovo
 // if (module.hot) {
@@ -244,9 +243,6 @@ const controlHotelData = function (data) {
   closeWindowHotel();
 };
 
-const listHotel = function () {
-  return console.log();
-};
 ///*** */
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
@@ -267,11 +263,6 @@ const init = function () {
   addHotelView.clickElementHandler(addHotelView._btnAddHotel, addModalHotel);
   addHotelView.clickElementHandler(addHotelView._btnClose, closeWindowHotel);
   addHotelView.addHotelData(controlHotelData);
-  ListHotel.listHotel(listHotel);
-  //ListHotel.listHotel(listHotel);
-  //listHotel.listHotel(listHotel);
-
-  //listHotel.addListHotel(listHotel);
 
   // controlServings();
 };
