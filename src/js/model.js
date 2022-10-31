@@ -72,7 +72,9 @@ export const loadSearchResults = async function (query, filterType = 1) {
     } else {
       const data = JSON.parse(localStorage.getItem('hotels'));
 
-      const dataHotel = data.filter(element => element.title.includes(query));
+      const dataHotel = data.filter(element =>
+        element.title.toLowerCase().includes(query.toLowerCase())
+      );
 
       const hotel = dataHotel[1];
       //console.log(data); //// ?key=${KEY} dodajemo vlastiti kljuc u api
