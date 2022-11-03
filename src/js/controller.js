@@ -57,10 +57,14 @@ const controlSearchResults = async function () {
   try {
     const query = searchView.getQuery();
 
+    const filterType = document.querySelector(
+      'input[type=radio][name="filter"]:checked'
+    ).value;
+
     if (!query) return;
     resultsView.renderSpiner();
 
-    await model.loadSearchResults(query);
+    await model.loadSearchResults(query, filterType);
 
     // Rendanje  rezultata rezultata
 
@@ -73,7 +77,7 @@ const controlSearchResults = async function () {
 
     paginationView.render(model.state.search);
   } catch (err) {
-    // console.log(err);
+    //console.log(err);
   }
 };
 
@@ -238,6 +242,7 @@ const controlHotelData = function (data) {
 
   closeWindowHotel();
 };
+
 ///*** */
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
@@ -250,9 +255,10 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
   addRecipeView.addHandlerUpload(controlAddRecipe);
-  DropMenu.addHandlerFilter(showCloseDropmenu);
+
   DropMenu.onRadioChangeHandler(DropMenu._recepiesCheck, controlRadioBtns);
   DropMenu.onRadioChangeHandler(DropMenu._hotelsCheck, controlRadioBtns);
+
   DropMenu.stopSubmitDropBtn();
   //// ucitavamo ali jos uvijek nije stigao odgovor ucitavanja recepata async await
   addHotelView.clickElementHandler(addHotelView._btnAddHotel, addModalHotel);

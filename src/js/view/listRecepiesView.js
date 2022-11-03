@@ -13,7 +13,6 @@ export default class listRecepiesView extends View {
         const id = parentA.getAttribute('href').slice(1);
         const index = this._data.findIndex(el => el.id === id);
         const recipe = this._data[index];
-
         if (index < 0) return;
 
         handler(recipe);

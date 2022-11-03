@@ -55,8 +55,12 @@
   display: flex;
   position: absolute;
   background-color: #fff;
-  padding: 8px 26px;
-  z-index: 10;
+  //padding: 12px 26px 53px 20px;
+  width: 10rem;
+  margin-top: 2px;
+  padding-top: 5px;
+  //z-index: 10;
+  transition: all 0.3s 0.1s;
   //border-radius: 0 0 20px 20px;
 
   ul {

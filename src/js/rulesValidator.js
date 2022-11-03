@@ -22,7 +22,7 @@ export default class Rules {
 
   minLength(
     length = 0,
-    message = 'Field {label} must have min ' + length + 'characters! '
+    message = 'Field {label} must have min ' + length + 'characters!'
   ) {
     if (this.value.length < length) {
       this._errorMessages.push(this.#messageMarkup(message));
@@ -43,25 +43,25 @@ export default class Rules {
   emailCheck(message = 'Email must be in correct format! ') {
     const validRgx =
       /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    if (this.value == '' && !this.value.match(validRgx)) {
+    if (!this.value == '' && !this.value.match(validRgx)) {
       this._errorMessages.push(this.#messageMarkup(message));
     }
     return this;
   }
 
-  urlCheck(message = 'Url is not in correct format! ') {
+  urlCheck(message = 'Url is not in correct format!') {
     const validRgx =
-      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+      /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gm;
 
-    if (this.value == '' && !this.value.match(validRgx)) {
+    if (!this.value == '' && !this.value.match(validRgx)) {
       this._errorMessages.push(this.#messageMarkup(message));
     }
     return this;
   }
 
-  checkPhone(message = 'Phone number is not in correct format! ') {
-    const validRgx = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;
-    if (this.value == '' && !this.value.match(validRgx)) {
+  checkPhone(message = 'Phone number is not in correct format!') {
+    const validRgx = /^\d{9}$|^\+\d{11,12}$|^00\d{11,12}$/s;
+    if (!this.value == '' && !this.value.match(validRgx)) {
       this._errorMessages.push(this.#messageMarkup(message));
     }
     return this;
