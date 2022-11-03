@@ -244,6 +244,8 @@
   max-width: 40rem;
   margin: 0 auto;
   padding: 5rem 4rem;
+  padding-left: 0;
+  padding-right: 0;
 
   display: flex;
 
@@ -277,4 +279,5 @@
 }
 .buttons {
   display: flex;
+  margin-top: 16px;
 }
