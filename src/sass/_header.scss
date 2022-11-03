@@ -21,10 +21,10 @@
   padding-left: 3rem;
   transition: all 0.3s;
 
-  &:focus-within {
-    transform: translateY(-2px);
-    box-shadow: 0 0.7rem 3rem rgba($color-grey-dark-1, 0.08);
-  }
+  // &:focus-within {
+  //   transform: translateY(-2px);
+  //   box-shadow: 0 0.7rem 3rem rgba($color-grey-dark-1, 0.08);
+  // }
 
   &__field {
     border: none;

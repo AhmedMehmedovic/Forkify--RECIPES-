@@ -10,14 +10,6 @@ class DropMenu extends View {
   _hotelsCheck = this._dropmenu.querySelector('[data-name="hotels"]');
   _searchFild = document.querySelector('.search__field');
 
-  //listener for button show dropmenu
-  addHandlerFilter(handler) {
-    this._parrentElement.addEventListener('click', function (e) {
-      e.preventDefault();
-
-      handler();
-    });
-  }
   stopSubmitDropBtn() {
     this._parrentElement.addEventListener('click', e => {
       e.preventDefault();

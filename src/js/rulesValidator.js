@@ -22,7 +22,7 @@ export default class Rules {
 
   minLength(
     length = 0,
-    message = 'Field {label} must have min ' + length + 'characters! '
+    message = 'Field {label} must have min ' + length + 'characters!'
   ) {
     if (this.value.length < length) {
       this._errorMessages.push(this.#messageMarkup(message));
@@ -49,9 +49,9 @@ export default class Rules {
     return this;
   }
 
-  urlCheck(message = 'Url is not in correct format! ') {
+  urlCheck(message = 'Url is not in correct format!') {
     const validRgx =
-      /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+      /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gm;
 
     if (!this.value == '' && !this.value.match(validRgx)) {
       this._errorMessages.push(this.#messageMarkup(message));
@@ -59,9 +59,8 @@ export default class Rules {
     return this;
   }
 
-  checkPhone(message = 'Phone number is not in correct format! ') {
-    const validRgx =
-      /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
+  checkPhone(message = 'Phone number is not in correct format!') {
+    const validRgx = /^\d{9}$|^\+\d{11,12}$|^00\d{11,12}$/s;
     if (!this.value == '' && !this.value.match(validRgx)) {
       this._errorMessages.push(this.#messageMarkup(message));
     }

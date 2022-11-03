@@ -77,7 +77,7 @@ const controlSearchResults = async function () {
 
     paginationView.render(model.state.search);
   } catch (err) {
-    // console.log(err);
+    //console.log(err);
   }
 };
 
@@ -255,9 +255,10 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
   addRecipeView.addHandlerUpload(controlAddRecipe);
-  DropMenu.addHandlerFilter(showCloseDropmenu);
+
   DropMenu.onRadioChangeHandler(DropMenu._recepiesCheck, controlRadioBtns);
   DropMenu.onRadioChangeHandler(DropMenu._hotelsCheck, controlRadioBtns);
+
   DropMenu.stopSubmitDropBtn();
   //// ucitavamo ali jos uvijek nije stigao odgovor ucitavanja recepata async await
   addHotelView.clickElementHandler(addHotelView._btnAddHotel, addModalHotel);

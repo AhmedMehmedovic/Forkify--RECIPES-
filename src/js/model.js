@@ -1,6 +1,8 @@
 import { API_URL, RESULT_PER_PAGE, KEY } from './config';
 //import { getJSON, sendJSON } from './helpers'; /// zamijenjeno sa jednom funkcijom AJAX
 import { AJAX } from './helpers';
+import dropMenuView from './view/dropMenuView';
+import resultsView from './view/resultsView';
 
 export const state = {
   recipe: {},
@@ -53,6 +55,7 @@ export const loadSearchResults = async function (query, filterType = 1) {
     state.search.query = query;
     if (filterType == 1) {
       const data = await AJAX(`?search=${query}&key=${KEY}`); //// ?key=${KEY} dodajemo vlastiti kljuc u api
+
       //  console.log(data);
       state.search.results = data.data.recipes.map(rec => {
         if (state.bookmarks.some(bookmark => bookmark.id === rec.id))
@@ -76,7 +79,7 @@ export const loadSearchResults = async function (query, filterType = 1) {
         element.title.toLowerCase().includes(query.toLowerCase())
       );
 
-      const hotel = dataHotel[1];
+      // const hotel = dataHotel[1];
       //console.log(data); //// ?key=${KEY} dodajemo vlastiti kljuc u api
 
       state.search.results = dataHotel.map(

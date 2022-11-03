@@ -102,15 +102,8 @@ class AddHotel extends View {
               .querySelector('body > div.add-hotel-window > form > div.error')
               .remove();
           }
-          self._errors = [];
-          self._errors.push(validator.errors);
+          self._errors = validator.errors;
           self.renderError(self._errors, self._formHotel, 'beforeend');
-
-          if (self._errors !== validator.errors && validator.errors == 0) {
-            self._errors.push(validator.errors);
-            self.renderError(self._errors, self._formHotel, 'beforeend');
-            return;
-          }
         }
         self._errors = [];
         return false;
