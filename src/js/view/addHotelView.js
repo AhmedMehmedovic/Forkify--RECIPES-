@@ -82,12 +82,12 @@ class AddHotel extends View {
         .maxLength(15);
       validator.setRules('sourceUrl').urlCheck();
       validator.setRules('image').urlCheck();
-      validator.setRules('address').maxLength(20);
+      validator.setRules('address').maxLength(60);
       validator
         .setRules('Phone')
         .required()
         .minLength(9)
-        .maxLength(13)
+        .maxLength(20)
         .checkPhone();
       validator.setRules('Email').emailCheck();
 
