@@ -1,3 +1,4 @@
+import { async } from 'regenerator-runtime';
 import { API_URL, RESULT_PER_PAGE, KEY } from './config';
 //import { getJSON, sendJSON } from './helpers'; /// zamijenjeno sa jednom funkcijom AJAX
 import { AJAX } from './helpers';
@@ -30,11 +31,26 @@ const createRecipeObject = function (data) {
   };
 };
 
+const createHotelObject = function (data) {
+  const hotel = data;
+  return {
+    type: 'hotel',
+    address: hotel.address,
+    id: hotel.id,
+    title: hotel.title,
+    sourceUrl: hotel.sourceUrl,
+    phone: hotel.Phone,
+    email: hotel.Email,
+    image: hotel.image,
+  };
+};
+
 export const loadRecipe = async function (id) {
   try {
     const data = await AJAX(`${id}?key=${KEY}`);
 
     state.recipe = createRecipeObject(data);
+
     ///zapamti fill bookmark prilikom ponovnog rendanja
     if (state.bookmarks.some(bookmark => bookmark.id === id))
       state.recipe.bookmarked = true;
@@ -45,6 +61,24 @@ export const loadRecipe = async function (id) {
     //temporary error handling
     // console.error(`${err} ******`);
 
+    throw err;
+  }
+};
+
+export const loadHotel = async function (id) {
+  try {
+    const data = JSON.parse(localStorage.getItem('hotels'));
+
+    data.forEach(element => {
+      if (element.id == id) {
+        state.recipe = createHotelObject(element);
+      } else {
+        return false;
+      }
+      // state.recipe = createHotelObject(element);
+      // console.log(state.recipe);
+    });
+  } catch (err) {
     throw err;
   }
 };
