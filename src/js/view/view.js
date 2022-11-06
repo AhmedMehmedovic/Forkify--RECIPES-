@@ -13,7 +13,6 @@ export default class View {
 
     this._data = data;
     const markup = this._generateMarkup();
-
     if (!render) return markup;
 
     this._clear(); //// cisti html content prije rendanja ponovo

@@ -25,7 +25,9 @@ import View from './view/view.js';
 const controlRecipes = async function () {
   try {
     const id = window.location.hash.slice(1);
+    const digital = /^\d+$/gm;
     //Loading recepi
+
     if (!id) return;
     RecipeView.renderSpiner();
 
@@ -34,20 +36,25 @@ const controlRecipes = async function () {
     resultsView.update(model.getSearchResultsPage()); /// isto kao sto dole koristimo render methodu na liniji 61 ovdje koristimo update kako ne bi ponovo rendali cijeli sadrzaj
     bookmarksView.update(model.state.bookmarks);
 
+    if (id.match(digital)) {
+      await model.loadHotel(id);
+      RecipeView.render(model.state.recipe);
+    } else {
+      await model.loadRecipe(id);
+      RecipeView.render(model.state.recipe);
+    }
     //iz modela
-    await model.loadRecipe(id);
 
+    //console.log(data.publisher);
     //const { recipe } = model.state;
 
     // Rendering recepi
     //deklarisanje recepi view iz tog fajla
-    RecipeView.render(model.state.recipe);
 
     //test  zbog async await funkcije
     // controlServings();
   } catch (err) {
     recepieView.renderError();
-    //console.log(err);
   }
 };
 
