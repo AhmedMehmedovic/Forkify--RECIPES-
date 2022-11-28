@@ -177,32 +177,3 @@
     font-weight: 700;
   }
 }
-
-.recipe_hotels {
-  padding: 5rem 8rem;
-  font-size: 1.6rem;
-  line-height: 1.4;
-  background-color: $color-grey-light-2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  &__ingredient-list {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2.5rem 3rem;
-    list-style: none;
-  }
-
-  &__ingredient {
-    display: flex;
-  }
-  .heading--2,
-  p {
-    display: flex;
-    align-items: center;
-
-    .btn--tiny {
-      margin-left: 10px;
-    }
-  }
-}

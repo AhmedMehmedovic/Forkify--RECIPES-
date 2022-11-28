@@ -50,7 +50,6 @@ class AddRecipeView extends View {
       //debugger;
       //if (!this) return;
       this._dataArray = [...new FormData(this)];
-
       const data = Object.fromEntries(this._dataArray); ///pretvaranje arraya u object
 
       handler(data);
