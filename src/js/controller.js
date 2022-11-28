@@ -41,7 +41,7 @@ const controlRecipes = async function () {
 
     if (id.match(digital)) {
       await model.loadHotel(id);
-      console.log('d');
+      // console.log('d');
       RecipeView.render(model.state.recipe);
     } else {
       await model.loadRecipe(id);
@@ -58,7 +58,7 @@ const controlRecipes = async function () {
     //test  zbog async await funkcije
     // controlServings();
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     recepieView.renderError();
   }
 };
@@ -255,9 +255,9 @@ const controlHotelData = function (data) {
   closeWindowHotel();
 };
 
-const modalHoteltoRecipe = function () {
-  console.log('s');
-};
+// const modalHoteltoRecipe = function () {
+//   console.log('s');
+// };
 
 ///*** */
 const init = function () {

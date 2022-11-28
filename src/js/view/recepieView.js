@@ -120,7 +120,7 @@ class RecipeView extends View {
       </div>
         `;
     }
-    console.info(this._data);
+    // console.info(this._data);
     return `
     <figure class="recipe__fig">
           <img src="${this._data.image}" alt="${
@@ -277,11 +277,11 @@ class RecipeView extends View {
         addHotelView.showWindow(_overlay, _addHoteltoRecipeWindow);
       });
 
-    console.log(this._parrentElement);
+    // console.log(this._parrentElement);
 
     const hotels = JSON.parse(localStorage.getItem('hotels')) ?? [];
     const selectInput = $(_addHoteltoRecipeWindow).find('select');
-    console.log(hotels);
+    // console.log(hotels);
 
     for (const hotel of hotels) {
       selectInput.append(`<option value="${hotel.id}">${hotel.title}</option>`);
