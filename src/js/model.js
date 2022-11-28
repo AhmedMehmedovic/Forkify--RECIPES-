@@ -1,3 +1,4 @@
+
 import { async } from 'regenerator-runtime';
 import { API_URL, RESULT_PER_PAGE, KEY } from './config';
 
@@ -6,6 +7,11 @@ import { AJAX } from './helpers';
 import dropMenuView from './view/dropMenuView';
 import recepieView from './view/recepieView';
 import resultsView from './view/resultsView';
+
+import { API_URL, RESULT_PER_PAGE, KEY } from './config';
+//import { getJSON, sendJSON } from './helpers'; /// zamijenjeno sa jednom funkcijom AJAX
+import { AJAX } from './helpers';
+
 
 export const state = {
   recipe: {},
@@ -17,6 +23,7 @@ export const state = {
   },
   bookmarks: [],
 };
+
 
 export const saveConnections = function (hotels, recepieID = undefined) {
   let forSave = localStorage.getItem('connections') ?? '{}';
@@ -30,6 +37,11 @@ const createRecipeObject = function (data) {
   const hotelIds = [1, 2, 4];
   return {
     type: 'recepie',
+=======
+const createRecipeObject = function (data) {
+  const { recipe } = data.data;
+  return {
+
     id: recipe.id,
     title: recipe.title,
     publisher: recipe.publisher,
@@ -37,11 +49,14 @@ const createRecipeObject = function (data) {
     image: recipe.image_url,
     servings: recipe.servings,
     cookingTime: recipe.cooking_time,
+
     hotels: hotelIds,
+
     ingredients: recipe.ingredients, ///informacija o sastojcima
     ...(recipe.key && { key: recipe.key }), /// ukoliko ne postoji recipe.key, nece se desiti nista, medjutim ukoliko postoji onda ce se spremiti kao da je napisano 'key: recipe.key ' (zaduzen spread operatotr ...)
   };
 };
+
 
 const createHotelObject = function (data) {
   const hotel = data;
@@ -62,7 +77,13 @@ export const loadRecipe = async function (id) {
     const data = await AJAX(`${id}?key=${KEY}`);
 
     state.recipe = createRecipeObject(data);
+=======
+export const loadRecipe = async function (id) {
+  try {
+    const data = await AJAX(`${id}?key=${KEY}`);
 
+
+    state.recipe = createRecipeObject(data);
     ///zapamti fill bookmark prilikom ponovnog rendanja
     if (state.bookmarks.some(bookmark => bookmark.id === id))
       state.recipe.bookmarked = true;
@@ -79,6 +100,7 @@ export const loadRecipe = async function (id) {
 
 export const loadHotel = async function (id) {
   try {
+
     const data = JSON.parse(localStorage.getItem('hotels'));
 
     data.forEach(element => {
@@ -162,6 +184,24 @@ export const loadSearchResults = async function (query, filterType = 1) {
       //   },
       // ];
     }
+    //console.log(query);
+    state.search.query = query;
+    const data = await AJAX(`?search=${query}&key=${KEY}`); //// ?key=${KEY} dodajemo vlastiti kljuc u api
+    //  console.log(data);
+    state.search.results = data.data.recipes.map(rec => {
+      if (state.bookmarks.some(bookmark => bookmark.id === rec.id))
+        rec.bookmarked = true;
+      else rec.bookmarked = false;
+
+      return {
+        id: rec.id,
+        title: rec.title,
+        publisher: rec.publisher,
+        image: rec.image_url,
+        bookmarked: rec.bookmarked,
+        ...(rec.key && { key: rec.key }),
+      };
+    });
 
     state.search.page = 1; ///restartujemo broj stranice koja se prikazuje prilikom svake pretrage (bug) postavljamo stranicu ponovo na 1
   } catch (err) {

@@ -99,7 +99,11 @@ export default class View {
     </div>`;
 
     this._clear();
+
     parentEl.insertAdjacentHTML(position, markup);
+
+    this._parrentElement.insertAdjacentHTML('afterbegin', markup);
+
   }
 
   ////////////************************* */

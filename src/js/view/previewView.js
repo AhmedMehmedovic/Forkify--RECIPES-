@@ -39,7 +39,11 @@ class PreviewView extends View {
               </figure>
               <div class="preview__data">
                 <h4 class="preview__title">${this._data.title}</h4>
+
                 <p class="preview__publisher">${publisher}</p>
+
+                <p class="preview__publisher">${this._data.publisher}</p>
+
                 
               </div>
               <div class="preview__user-generated ${
@@ -50,8 +54,18 @@ class PreviewView extends View {
             </svg>
         
       </div>
+
               ${buttonBookmark}
               ${info}
+
+              <button class="btn--inline btn--bookmark btn-delete-bookmark">
+              <svg class="">
+                <use href="${icons}#icon-bookmark${
+      this._data.bookmarked ? '-fill' : ''
+    }"></use>
+              </svg>
+            </button>
+
             </a>
           </li>
     `;

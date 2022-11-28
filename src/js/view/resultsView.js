@@ -1,11 +1,14 @@
 import listRecepiesView from './listRecepiesView';
+
 import dropMenuView from './dropMenuView';
+
 
 class ResultsView extends listRecepiesView {
   _parrentElement = document.querySelector('.results');
 
   _errorMessage = 'No recepies found for youre query! Please try again!';
   _message = '';
+
 
   constructor() {
     super();
@@ -26,6 +29,7 @@ class ResultsView extends listRecepiesView {
       });
     }
   }
+
 }
 
 export default new ResultsView();
