@@ -14,6 +14,7 @@ export default class Rules {
   }
 
   required(message = 'Field {label} is required! ') {
+    if (typeof this.value === 'undefined') this.value = '';
     if (this.value == '') {
       this._errorMessages.push(this.#messageMarkup(message));
     }
@@ -24,6 +25,7 @@ export default class Rules {
     length = 0,
     message = 'Field {label} must have min ' + length + 'characters!'
   ) {
+    if (typeof this.value === 'undefined') this.value = '';
     if (this.value.length < length) {
       this._errorMessages.push(this.#messageMarkup(message));
     }
@@ -34,6 +36,7 @@ export default class Rules {
     length = 0,
     message = 'Field {label} must have max ' + length + 'characters! '
   ) {
+    if (typeof this.value === 'undefined') this.value = '';
     if (this.value.length > length) {
       this._errorMessages.push(this.#messageMarkup(message));
     }
