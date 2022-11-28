@@ -1,5 +1,6 @@
 class SearchView {
   _parrentElement = document.querySelector('.search');
+  _searchBtn = document.querySelector('.btnFind');
 
   getQuery() {
     const query = this._parrentElement.querySelector('.search__field').value;

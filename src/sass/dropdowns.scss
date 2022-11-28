@@ -1,0 +1,19 @@
+.dropdown-menu {
+  z-index: 10;
+  background-color: #fff;
+  box-shadow: 0 0.8rem 5rem 2rem rgba($color-grey-dark-1, 0.3);
+
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.5s 0.2s;
+
+  &__list {
+    list-style: none;
+  }
+
+  &:hover,
+  .btn--dropdown:hover + & {
+    visibility: visible;
+    opacity: 1;
+  }
+}

@@ -1,12 +1,25 @@
 import View from './view';
 
 import icons from 'url:../../img/icons.svg';
+import * as hotelRecipe from './addHotelToRecipe';
+import addHotelView from './addHotelView';
+import jQuery from 'jquery';
 import { Fractional } from '../../../node_modules/fractional';
+
+window.jQuery = window.$ = require('jquery');
+
+import select2 from 'select2';
+import 'select2/dist/css/select2.css';
+import { MODAL_CLOSE_SEC } from '../config';
+select2($);
 
 class RecipeView extends View {
   _parrentElement = document.querySelector('.recipe');
   _errorMessage = 'We could not find that recipe. Please try another one!';
   _message = '';
+
+  _dataSelectedHotel;
+  _dataRecepie;
 
   addHandlerRender(handler) {
     ['hashchange', 'load'].forEach(event =>
@@ -44,6 +57,70 @@ class RecipeView extends View {
   ////////////**************************** */
   _generateMarkup() {
     // generisanje html recepata console.log(this.data);
+
+    if (this._data.type == 'hotel') {
+      const webDirections =
+        this._data.sourceUrl !== ''
+          ? ` <div class="recipe__directions">
+      <h2 class="heading--2">Please check out
+      directions to our website.</h2>
+     
+      <a
+        class="btn--small recipe__btn"
+        href="${this._data.sourceUrl}"
+        target="_blank"
+      >
+        <span>Website</span>
+        <svg class="search__icon">
+          <use href="${icons}#icon-arrow-right"></use>
+        </svg>
+      </a>
+    </div>`
+          : ` <div class="recipe__directions">
+      <h2 class="heading--2">We do not have website yet, please call us.</h2>
+     
+      
+    </div>`;
+
+      return `
+    <figure class="recipe__fig">
+          <img src="${this._data.image}" alt="${this._data.title}" class="recipe__img" />
+          <h1 class="recipe__title">
+            <span>${this._data.title}</span>
+          </h1>
+        </figure>
+
+        <div class="recipe__details">
+          <div class="recipe__info">
+            <svg class="recipe__info-icon">
+              <use href="${icons}#icon-email"></use>
+            </svg>
+            <span class="recipe__info-data recipe__info-data--minutes">${this._data.email}</span>
+            
+          </div>
+          <div class="recipe__info">
+            <svg class="recipe__info-icon">
+              <use href="${icons}#icon-location"></use>
+            </svg>
+            <span class="recipe__info-data recipe__info-data--people">${this._data.address}</span>     
+          </div>
+         
+         
+        </div>       
+
+       ${webDirections}
+
+        <div class="recipe__directions">
+        <h2 class="heading--3">Or you can call us on our phone:</h2>
+       
+       
+          <span class="heading--2">${this._data.phone}</span>
+         
+        
+      </div>
+        `;
+    }
+    // console.info(this._data);
     return `
     <figure class="recipe__fig">
           <img src="${this._data.image}" alt="${
@@ -120,6 +197,8 @@ class RecipeView extends View {
           </ul>
         </div>
 
+        
+
         <div class="recipe__directions">
           <h2 class="heading--2">How to cook it</h2>
           <p class="recipe__directions-text">
@@ -140,6 +219,22 @@ class RecipeView extends View {
             </svg>
           </a>
         </div>
+        <div class="recipe_hotels">
+        
+        
+          <h2 class="heading--2">HOTELS 
+          
+        </h2>
+        <p>ADD THE HOTEL WHERE YOU ATE THIS MEAL  <button class="btn--tiny btn--update-servings add_hotel_toRecipe" >
+        <svg>
+          <use href="http://localhost:1234/icons.dfd7a6db.svg?1667811641178#icon-plus-circle"></use>
+        </svg>
+      </button></p>
+          <ul class="recipe_hotels__ingredient-list">    
+
+          </ul>
+          
+        </div>
         `;
   }
   _generateMarkupIngridients(ing) {
@@ -157,6 +252,60 @@ class RecipeView extends View {
       </div>
     </li>
       `;
+  }
+
+  render(data, render = true) {
+    const _overlay = document.querySelector(
+      'body > div.overlay-hotel-toRecipe.hidden'
+    );
+    const _addHoteltoRecipeWindow = document.querySelector(
+      'body > div.add-hotel-toRecipe-window.hidden'
+    );
+    const _btnCloseModal = document.querySelector(
+      'body > div.add-hotel-toRecipe-window.hidden > button'
+    );
+
+    // let x = $(() => {
+    //   $('.js-example-basic-single').select2();
+    // });
+    //o console.log('f');
+    super.render(data, render);
+
+    this._parrentElement
+      .querySelector('div.recipe_hotels > p > button')
+      .addEventListener('click', e => {
+        addHotelView.showWindow(_overlay, _addHoteltoRecipeWindow);
+      });
+
+    // console.log(this._parrentElement);
+
+    const hotels = JSON.parse(localStorage.getItem('hotels')) ?? [];
+    const selectInput = $(_addHoteltoRecipeWindow).find('select');
+    // console.log(hotels);
+
+    for (const hotel of hotels) {
+      selectInput.append(`<option value="${hotel.id}">${hotel.title}</option>`);
+    }
+
+    selectInput.select2({
+      placeholder: 'Izaberi hotel',
+      allowClear: true,
+      tags: false,
+      multiple: true,
+    });
+
+    _btnCloseModal.addEventListener('click', e => {
+      addHotelView.showWindow(_overlay, _addHoteltoRecipeWindow);
+
+      $('[name="hoteli"]').val('');
+    });
+  }
+
+  changeHandler(handler) {
+    $('[name="hoteli"]').change(function () {
+      this._dataSelectedHotel = $('[name="hoteli"]').val();
+      handler(this._dataSelectedHotel);
+    });
   }
 }
 export default new RecipeView();

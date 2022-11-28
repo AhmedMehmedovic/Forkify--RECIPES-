@@ -1,6 +1,17 @@
+
+import { async } from 'regenerator-runtime';
+import { API_URL, RESULT_PER_PAGE, KEY } from './config';
+
+//import { getJSON, sendJSON } from './helpers'; /// zamijenjeno sa jednom funkcijom AJAX
+import { AJAX } from './helpers';
+import dropMenuView from './view/dropMenuView';
+import recepieView from './view/recepieView';
+import resultsView from './view/resultsView';
+
 import { API_URL, RESULT_PER_PAGE, KEY } from './config';
 //import { getJSON, sendJSON } from './helpers'; /// zamijenjeno sa jednom funkcijom AJAX
 import { AJAX } from './helpers';
+
 
 export const state = {
   recipe: {},
@@ -13,9 +24,24 @@ export const state = {
   bookmarks: [],
 };
 
+
+export const saveConnections = function (hotels, recepieID = undefined) {
+  let forSave = localStorage.getItem('connections') ?? '{}';
+  forSave = JSON.parse(forSave);
+  forSave[recepieID ?? state.recipe.id] = hotels;
+  localStorage.setItem('connections', JSON.stringify(forSave));
+};
+
+const createRecipeObject = function (data) {
+  const { recipe } = data.data;
+  const hotelIds = [1, 2, 4];
+  return {
+    type: 'recepie',
+=======
 const createRecipeObject = function (data) {
   const { recipe } = data.data;
   return {
+
     id: recipe.id,
     title: recipe.title,
     publisher: recipe.publisher,
@@ -23,14 +49,39 @@ const createRecipeObject = function (data) {
     image: recipe.image_url,
     servings: recipe.servings,
     cookingTime: recipe.cooking_time,
+
+    hotels: hotelIds,
+
     ingredients: recipe.ingredients, ///informacija o sastojcima
     ...(recipe.key && { key: recipe.key }), /// ukoliko ne postoji recipe.key, nece se desiti nista, medjutim ukoliko postoji onda ce se spremiti kao da je napisano 'key: recipe.key ' (zaduzen spread operatotr ...)
+  };
+};
+
+
+const createHotelObject = function (data) {
+  const hotel = data;
+  return {
+    type: 'hotel',
+    address: hotel.address,
+    id: hotel.id,
+    title: hotel.title,
+    sourceUrl: hotel.sourceUrl,
+    phone: hotel.Phone,
+    email: hotel.Email,
+    image: hotel.image,
   };
 };
 
 export const loadRecipe = async function (id) {
   try {
     const data = await AJAX(`${id}?key=${KEY}`);
+
+    state.recipe = createRecipeObject(data);
+=======
+export const loadRecipe = async function (id) {
+  try {
+    const data = await AJAX(`${id}?key=${KEY}`);
+
 
     state.recipe = createRecipeObject(data);
     ///zapamti fill bookmark prilikom ponovnog rendanja
@@ -47,8 +98,92 @@ export const loadRecipe = async function (id) {
   }
 };
 
-export const loadSearchResults = async function (query) {
+export const loadHotel = async function (id) {
   try {
+
+    const data = JSON.parse(localStorage.getItem('hotels'));
+
+    data.forEach(element => {
+      if (element.id == id) {
+        state.recipe = createHotelObject(element);
+      } else {
+        return false;
+      }
+      // state.recipe = createHotelObject(element);
+      // console.log(state.recipe);
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const loadSearchResults = async function (query, filterType = 1) {
+  try {
+    //console.log(query);
+    state.search.query = query;
+    if (filterType == 1) {
+      const data = await AJAX(`?search=${query}&key=${KEY}`); //// ?key=${KEY} dodajemo vlastiti kljuc u api
+
+      //  console.log(data);
+      state.search.results = data.data.recipes.map(rec => {
+        if (state.bookmarks.some(bookmark => bookmark.id === rec.id))
+          rec.bookmarked = true;
+        else rec.bookmarked = false;
+
+        return {
+          type: 'recepie',
+          id: rec.id,
+          title: rec.title,
+          publisher: rec.publisher,
+          image: rec.image_url,
+          bookmarked: rec.bookmarked,
+          ...(rec.key && { key: rec.key }),
+        };
+      });
+    } else {
+      const data = JSON.parse(localStorage.getItem('hotels'));
+
+      const dataHotel = data.filter(element =>
+        element.title.toLowerCase().includes(query.toLowerCase())
+      );
+
+      // const hotel = dataHotel[1];
+      //console.log(data); //// ?key=${KEY} dodajemo vlastiti kljuc u api
+
+      state.search.results = dataHotel.map(
+        hotel => ({
+          type: 'hotel',
+          id: hotel.id,
+          title: hotel.title,
+          publisher: '',
+          image: hotel.image,
+          bookmarked: false,
+          email: hotel.Email,
+          phone: hotel.Phone,
+          sourceUrl: hotel.sourceUrl,
+        })
+
+        //    {
+        //   if (state.bookmarks.some(bookmark => bookmark.title === hotel.title))
+        //     hotel.bookmarked = true;
+        //   else hotel.bookmarked = false;
+        // });
+      );
+      // console.log(state.search.results);
+      // state.search.results = [
+      //   {
+      //     type: 'hotel',
+      //     id: hotel.id,
+      //     title: hotel.title,
+      //     publisher: '',
+      //     image: hotel.image,
+      //     bookmarked: false,
+      //     email: hotel.Email,
+      //     phone: hotel.Phone,
+      //     sourceUrl: hotel.sourceUrl,
+      //   },
+      // ];
+    }
     //console.log(query);
     state.search.query = query;
     const data = await AJAX(`?search=${query}&key=${KEY}`); //// ?key=${KEY} dodajemo vlastiti kljuc u api
@@ -73,6 +208,7 @@ export const loadSearchResults = async function (query) {
     // console.error(`${err}`);
   }
 };
+///////////*********/// */
 
 //paginacija
 export const getSearchResultsPage = function (page = state.search.page) {
@@ -100,8 +236,11 @@ export const updateServings = function (newServings) {
 };
 
 //// spremanje cekiranih recepata (bookmark) u localstorage
-const storingBookmarks = function () {
-  localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+export const storingLocalStorage = function (
+  keyName = 'bookmarks',
+  data = state.bookmarks
+) {
+  localStorage.setItem(keyName, JSON.stringify(data));
 };
 
 ///**********///// */
@@ -129,7 +268,7 @@ export const addBookmark = function (recipe, bookmark = true) {
 
   ////oznacavanje trenutnog recepta u bookmark
   if (recipe.id === state.recipe.id) state.recipe.bookmarked = true; // ako je id recepta proslijedjenog jednak onom u aplikaciji trenutnom  onda  postavljamo state.recipe.bookmarked true
-  storingBookmarks();
+  storingLocalStorage();
 };
 
 /////*********DELETE BOOKMARK */
@@ -142,7 +281,7 @@ export const deleteBookmark = function (id) {
   state.bookmarks.splice(indexBookmark, 1);
   ////brisanje trenutnog recepta iz bookmark
   if (id === state.recipe.id) state.recipe.bookmarked = false;
-  storingBookmarks();
+  storingLocalStorage();
 };
 
 const init = function () {

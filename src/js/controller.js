@@ -1,4 +1,8 @@
 import * as model from './model.js';
+
+import { select2 } from '../../node_modules/select2';
+
+
 import { MODAL_CLOSE_SEC, RESULT_PER_PAGE } from './config.js';
 import RecipeView from './view/recepieView.js';
 import resultsView from './view/resultsView.js';
@@ -6,11 +10,18 @@ import paginationView from './view/paginationView.js';
 import bookmarksView from './view/bookmarksView.js';
 import addRecipeView from './view/addRecipeView.js';
 
+import addHotelView from './view/addHotelView.js';
+import rulesValidator from './rulesValidator.js';
+import DropMenu from './view/dropMenuView.js';
+import add_Hotel_ToRecipe from './view/addHotelToRecipe.js';
+
+
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import recepieView from './view/recepieView.js';
 
 import searchView from './view/searchView';
+import View from './view/view.js';
 
 //iz parcela dolazi ovo
 // if (module.hot) {
@@ -21,7 +32,9 @@ import searchView from './view/searchView';
 const controlRecipes = async function () {
   try {
     const id = window.location.hash.slice(1);
+    const digital = /^\d+$/gm;
     //Loading recepi
+
     if (!id) return;
     RecipeView.renderSpiner();
 
@@ -30,20 +43,32 @@ const controlRecipes = async function () {
     resultsView.update(model.getSearchResultsPage()); /// isto kao sto dole koristimo render methodu na liniji 61 ovdje koristimo update kako ne bi ponovo rendali cijeli sadrzaj
     bookmarksView.update(model.state.bookmarks);
 
+    if (id.match(digital)) {
+      await model.loadHotel(id);
+      // console.log('d');
+      RecipeView.render(model.state.recipe);
+    } else {
+      await model.loadRecipe(id);
+      RecipeView.render(model.state.recipe);
+    }
     //iz modela
-    await model.loadRecipe(id);
+
+
+    // console.log(data.publisher);
 
     //const { recipe } = model.state;
 
     // Rendering recepi
     //deklarisanje recepi view iz tog fajla
-    RecipeView.render(model.state.recipe);
 
     //test  zbog async await funkcije
     // controlServings();
   } catch (err) {
+    // console.log(err);
     recepieView.renderError();
+
     //console.log(err);
+
   }
 };
 
@@ -53,10 +78,14 @@ const controlSearchResults = async function () {
   try {
     const query = searchView.getQuery();
 
+    const filterType = document.querySelector(
+      'input[type=radio][name="filter"]:checked'
+    ).value;
+
     if (!query) return;
     resultsView.renderSpiner();
 
-    await model.loadSearchResults(query);
+    await model.loadSearchResults(query, filterType);
 
     // Rendanje  rezultata rezultata
 
@@ -69,7 +98,9 @@ const controlSearchResults = async function () {
 
     paginationView.render(model.state.search);
   } catch (err) {
+
     // console.log(err);
+
   }
 };
 
@@ -141,6 +172,107 @@ const controlToggleBookmark = function (recipe) {
 const controlBookmarks = function () {
   bookmarksView.render(model.state.bookmarks);
   bookmarksView.addHandlerDeleteBookmark(controlToggleBookmark);
+
+};
+
+///////////********kontroler za primanje novi podataka od unosa novog recepta */
+/// iz model.js uploadRecipe je async funcija i vraca promise, da bi rendali gresku cekamo da se vrati promis zato dodajemo await u try bloku
+const controlAddRecipe = async function (newRecipe) {
+  try {
+    //show loading spiner
+    addRecipeView.renderSpiner();
+    // upload the new recipe in data
+    await model.uploadRecipe(newRecipe);
+    //  console.log(model.state.recipe); //308 lekc
+    //render recipe
+    //recepieView.render(model.state.recipe);
+    //succes message
+    //console.log(addRecipeView.renderMessage);
+    // render bookmark view
+    bookmarksView.render(model.state.bookmarks);
+    addRecipeView.renderMessage();
+    //change ID in url
+
+    window.history.pushState(null, '', `#${model.state.recipe.id}`); //mijenjamo url bez da refreshujemo browser
+    // window.history.back() klikom u browseru za nazad automatski idemo nazad
+
+    /// close form window
+    setTimeout(function () {
+      addRecipeView.toggleWindow();
+      //location.reload();
+    }, MODAL_CLOSE_SEC * 1000); ///*1000 pretvara broj nasih sekundi u milisekunde
+  } catch (err) {
+    //console.log('14141' + err);
+    addRecipeView.renderError(err.message);
+  }
+  // console.log(newRecipe);
+  ///Upload novi recipe data
+};
+const showCloseDropmenu = function () {
+  DropMenu.toggle(DropMenu._dropmenu);
+
+  //console.log(checkBoxView._recepiesCheck);
+};
+
+const controlRadioBtns = function () {
+  DropMenu.toggle(DropMenu._iconHotel);
+  DropMenu.toggle(DropMenu._iconRecepies);
+
+  if (DropMenu._iconHotel.classList.contains('hidden')) {
+    DropMenu._searchFild.placeholder = 'Search recepies!!';
+    showCloseDropmenu();
+  }
+  if (DropMenu._iconRecepies.classList.contains('hidden')) {
+    DropMenu._searchFild.placeholder = 'Search hotels!!';
+    showCloseDropmenu();
+  }
+};
+
+/// control add hotel handler
+/////klik dodaj hotel modal
+const addModalHotel = function () {
+  addHotelView.showWindow(addHotelView._addHotelWindow, addHotelView._overlay);
+
+  _errorView = document.querySelector(
+    'body > div.add-hotel-window > form > div.error'
+  );
+  if (_errorView) {
+    _errorView.remove();
+  }
+  if (addHotelView._formHotelchildForm.classList.contains('hidden')) {
+    addHotelView._formHotelchildForm.classList.remove('hidden');
+    addHotelView._saveBtn.classList.remove('hidden');
+  }
+};
+////zatvori hotel modal
+const closeWindowHotel = function () {
+  addHotelView.showWindow(addHotelView._addHotelWindow, addHotelView._overlay);
+};
+////***Upravljanje datom iz unosa modal hotel* */
+const controlHotelData = function (data) {
+  if (
+    addHotelView._hotelsLocalStorage.length <= 0 &&
+    localStorage.getItem('hotels') !== null
+  ) {
+    addHotelView._hotelsLocalStorage = JSON.parse(
+      localStorage.getItem('hotels')
+    );
+    let newAlldata = addHotelView._hotelsLocalStorage.concat(data);
+    model.storingLocalStorage('hotels', newAlldata);
+  }
+  addHotelView._hotelsLocalStorage.push(data);
+
+  model.storingLocalStorage('hotels', addHotelView._hotelsLocalStorage);
+
+  closeWindowHotel();
+};
+
+// const modalHoteltoRecipe = function () {
+//   console.log('s');
+// };
+
+///*** */
+=======
 };
 
 ///////////********kontroler za primanje novi podataka od unosa novog recepta */
@@ -179,6 +311,7 @@ const controlAddRecipe = async function (newRecipe) {
   ///Upload novi recipe data
 };
 
+
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
 
@@ -190,7 +323,21 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPaginationaButtns);
   addRecipeView.addHandlerUpload(controlAddRecipe);
+
+  DropMenu.onRadioChangeHandler(DropMenu._recepiesCheck, controlRadioBtns);
+  DropMenu.onRadioChangeHandler(DropMenu._hotelsCheck, controlRadioBtns);
+
+  DropMenu.stopSubmitDropBtn();
+
   //// ucitavamo ali jos uvijek nije stigao odgovor ucitavanja recepata async await
+  addHotelView.clickElementHandler(addHotelView._btnAddHotel, addModalHotel);
+  addHotelView.clickElementHandler(addHotelView._btnClose, closeWindowHotel);
+  addHotelView.addHotelData(controlHotelData);
+
+  recepieView.changeHandler(model.saveConnections);
+  //
+
+  // addHotelView.clickElementHandler(add_Hotel_ToRecipe._btnAddHotel);
   // controlServings();
 };
 init();
