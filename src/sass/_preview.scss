@@ -4,7 +4,7 @@
     &:visited {
       display: flex;
       align-items: center;
-      padding: 1.5rem 1.3rem;
+      padding: 1.5rem 3.25rem;
       transition: all 0.3s;
       border-right: 1px solid #fff;
       text-decoration: none;
@@ -55,7 +55,7 @@
   }
 
   &__data {
-    //  display: block;
+    display: grid;
     width: 100%;
     grid-template-columns: 1fr 2rem;
     row-gap: 0.1rem;

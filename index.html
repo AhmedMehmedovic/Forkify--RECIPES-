@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="src/sass/main.scss" />
     <script type="module" src="src/js/controller.js"></script>
 
-    <title>Find Recipe</title>
+    <title>Pronađi recept</title>
   </head>
 
   <body>
@@ -24,70 +24,24 @@
           <input
             type="text"
             class="search__field"
-            placeholder="Search recepies!!"
+            placeholder="Traži preko 1,000,000 recepata..."
           />
-
-          <div class="dropdown1">
-            <button class="btnDrop btn btn--dropdown" type="button">
-              <svg class="search__icon icon_hotel hidden">
-                <use href="src/img/icons.svg#icon-hotel"></use>
-              </svg>
-              <svg class="search__icon icon_recipe">
-                <use href="src/img/icons.svg#icon-recepies"></use>
-              </svg>
-            </button>
-
-            <div class="dropMenu dropdown-menu">
-              <ul>
-                <li>
-                  <input
-                    type="radio"
-                    name="filter"
-                    value="1"
-                    id="RECEPIES"
-                    data-name="recepies"
-                    checked
-                  />
-                  <label for="RECEPIES">RECEPIES</label>
-                </li>
-                <li>
-                  <input
-                    type="radio"
-                    data-name="hotels"
-                    name="filter"
-                    value="2"
-                    id="HOTELS"
-                  />
-                  <label for="HOTELS">HOTELS</label>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <button class="btn btnFind" type="submit">
+          <button class="btn search__btn">
             <svg class="search__icon">
               <use href="src/img/icons.svg#icon-search"></use>
             </svg>
-            <span>search</span>
+            <span>Pretraži</span>
           </button>
         </form>
 
         <nav class="nav">
           <ul class="nav__list">
             <li class="nav__item">
-              <button class="nav__btn nav__btn--add-hotel">
-                <svg class="nav__icon">
-                  <use href="src/img/icons.svg#icon-hotel"></use>
-                </svg>
-                <span>Add Hotel</span>
-              </button>
-            </li>
-            <li class="nav__item">
               <button class="nav__btn nav__btn--add-recipe">
                 <svg class="nav__icon">
                   <use href="src/img/icons.svg#icon-edit"></use>
                 </svg>
-                <span>Add Recipe</span>
+                <span>Dodaj recept</span>
               </button>
             </li>
             <li class="nav__item">
@@ -95,7 +49,7 @@
                 <svg class="nav__icon">
                   <use href="src/img/icons.svg#icon-bookmark"></use>
                 </svg>
-                <span>Bookmarked recepies</span>
+                <span>Spremljeni recepti</span>
               </button>
               <div class="bookmarks">
                 <ul class="bookmarks__list">
@@ -129,44 +83,45 @@
           </ul>
         </nav>
       </header>
+
       <div class="search-results">
         <ul class="results">
           <!-- <a href="#5ed6604591c37cdc054bc886">Recipe</a>
-            <a href="#5ed6604591c37cdc054bc877">Recipe2</a> -->
+          <a href="#5ed6604591c37cdc054bc877">Recipe2</a> -->
 
-          <!--
-            <li class="preview">
-              <a class="preview__link preview__link--active" href="#23456">
-                <figure class="preview__fig">
-                  <img src="src/img/test-1.jpg" alt="Test" />
-                </figure>
-                <div class="preview__data">
-                  <h4 class="preview__title">Pasta with Tomato Cream ...</h4>
-                  <p class="preview__publisher">The Pioneer Woman</p>
-                  <div class="preview__user-generated">
-                    <svg>
-                      <use href="src/img/icons.svg#icon-user"></use>
-                    </svg>
-                  </div>
+          <!-- 
+          <li class="preview">
+            <a class="preview__link preview__link--active" href="#23456">
+              <figure class="preview__fig">
+                <img src="src/img/test-1.jpg" alt="Test" />
+              </figure>
+              <div class="preview__data">
+                <h4 class="preview__title">Pasta with Tomato Cream ...</h4>
+                <p class="preview__publisher">The Pioneer Woman</p>
+                <div class="preview__user-generated">
+                  <svg>
+                    <use href="src/img/icons.svg#icon-user"></use>
+                  </svg>
                 </div>
-              </a>
-            </li>
-             -->
+              </div>
+            </a>
+          </li>
+           -->
         </ul>
 
         <div class="pagination">
           <!-- <button class="btn--inline pagination__btn--prev">
-              <svg class="search__icon">
-                <use href="src/img/icons.svg#icon-arrow-left"></use>
-              </svg>
-              <span>Page 1</span>
-            </button>
-            <button class="btn--inline pagination__btn--next">
-              <span>Page 3</span>
-              <svg class="search__icon">
-                <use href="src/img/icons.svg#icon-arrow-right"></use>
-              </svg>
-            </button> -->
+            <svg class="search__icon">
+              <use href="src/img/icons.svg#icon-arrow-left"></use>
+            </svg>
+            <span>Page 1</span>
+          </button>
+          <button class="btn--inline pagination__btn--next">
+            <span>Page 3</span>
+            <svg class="search__icon">
+              <use href="src/img/icons.svg#icon-arrow-right"></use>
+            </svg>
+          </button> -->
         </div>
 
         <p class="copyright">
@@ -178,7 +133,7 @@
             >Ahmed Mehmedović</a
           >
           <br />
-          Education and practicing.
+          Izrada sajta prilikom edukacije i vježbe.
         </p>
       </div>
 
@@ -189,119 +144,119 @@
               <use href="src/img/icons.svg#icon-smile"></use>
             </svg>
           </div>
-          <p>Find your favorite food and enjoy in cooking.</p>
+          <p>Pronađite svoj omiljeni recept i uživajte u kuhanju !</p>
         </div>
 
         <!-- <div class="spinner">
-            <svg>
-              <use href="src/img/icons.svg#icon-loader"></use>
-            </svg>
-          </div> -->
+          <svg>
+            <use href="src/img/icons.svg#icon-loader"></use>
+          </svg>
+        </div> -->
 
         <!-- <div class="error">
-              <div>
-                <svg>
-                  <use href="src/img/icons.svg#icon-alert-triangle"></use>
-                </svg>
-              </div>
-              <p>No recipes found for your query. Please try again!</p>
-            </div> -->
+            <div>
+              <svg>
+                <use href="src/img/icons.svg#icon-alert-triangle"></use>
+              </svg>
+            </div>
+            <p>No recipes found for your query. Please try again!</p>
+          </div> -->
 
         <!--
-          <figure class="recipe__fig">
-            <img src="src/img/test-1.jpg" alt="Tomato" class="recipe__img" />
-            <h1 class="recipe__title">
-              <span>Pasta with tomato cream sauce</span>
-            </h1>
-          </figure>
+        <figure class="recipe__fig">
+          <img src="src/img/test-1.jpg" alt="Tomato" class="recipe__img" />
+          <h1 class="recipe__title">
+            <span>Pasta with tomato cream sauce</span>
+          </h1>
+        </figure>
 
-          <div class="recipe__details">
-            <div class="recipe__info">
-              <svg class="recipe__info-icon">
-                <use href="src/img/icons.svg#icon-clock"></use>
-              </svg>
-              <span class="recipe__info-data recipe__info-data--minutes">45</span>
-              <span class="recipe__info-text">minutes</span>
+        <div class="recipe__details">
+          <div class="recipe__info">
+            <svg class="recipe__info-icon">
+              <use href="src/img/icons.svg#icon-clock"></use>
+            </svg>
+            <span class="recipe__info-data recipe__info-data--minutes">45</span>
+            <span class="recipe__info-text">minutes</span>
+          </div>
+          <div class="recipe__info">
+            <svg class="recipe__info-icon">
+              <use href="src/img/icons.svg#icon-users"></use>
+            </svg>
+            <span class="recipe__info-data recipe__info-data--people">4</span>
+            <span class="recipe__info-text">servings</span>
+
+            <div class="recipe__info-buttons">
+              <button class="btn--tiny btn--increase-servings">
+                <svg>
+                  <use href="src/img/icons.svg#icon-minus-circle"></use>
+                </svg>
+              </button>
+              <button class="btn--tiny btn--increase-servings">
+                <svg>
+                  <use href="src/img/icons.svg#icon-plus-circle"></use>
+                </svg>
+              </button>
             </div>
-            <div class="recipe__info">
-              <svg class="recipe__info-icon">
-                <use href="src/img/icons.svg#icon-users"></use>
-              </svg>
-              <span class="recipe__info-data recipe__info-data--people">4</span>
-              <span class="recipe__info-text">servings</span>
+          </div>
 
-              <div class="recipe__info-buttons">
-                <button class="btn--tiny btn--increase-servings">
-                  <svg>
-                    <use href="src/img/icons.svg#icon-minus-circle"></use>
-                  </svg>
-                </button>
-                <button class="btn--tiny btn--increase-servings">
-                  <svg>
-                    <use href="src/img/icons.svg#icon-plus-circle"></use>
-                  </svg>
-                </button>
+          <div class="recipe__user-generated">
+            <svg>
+              <use href="src/img/icons.svg#icon-user"></use>
+            </svg>
+          </div>
+          <button class="btn--round">
+            <svg class="">
+              <use href="src/img/icons.svg#icon-bookmark-fill"></use>
+            </svg>
+          </button>
+        </div>
+
+        <div class="recipe__ingredients">
+          <h2 class="heading--2">Recipe ingredients</h2>
+          <ul class="recipe__ingredient-list">
+            <li class="recipe__ingredient">
+              <svg class="recipe__icon">
+                <use href="src/img/icons.svg#icon-check"></use>
+              </svg>
+              <div class="recipe__quantity">1000</div>
+              <div class="recipe__description">
+                <span class="recipe__unit">g</span>
+                pasta
               </div>
-            </div>
+            </li>
 
-            <div class="recipe__user-generated">
-              <svg>
-                <use href="src/img/icons.svg#icon-user"></use>
+            <li class="recipe__ingredient">
+              <svg class="recipe__icon">
+                <use href="src/img/icons.svg#icon-check"></use>
               </svg>
-            </div>
-            <button class="btn--round">
-              <svg class="">
-                <use href="src/img/icons.svg#icon-bookmark-fill"></use>
-              </svg>
-            </button>
-          </div>
+              <div class="recipe__quantity">0.5</div>
+              <div class="recipe__description">
+                <span class="recipe__unit">cup</span>
+                ricotta cheese
+              </div>
+            </li>
+          </ul>
+        </div>
 
-          <div class="recipe__ingredients">
-            <h2 class="heading--2">Recipe ingredients</h2>
-            <ul class="recipe__ingredient-list">
-              <li class="recipe__ingredient">
-                <svg class="recipe__icon">
-                  <use href="src/img/icons.svg#icon-check"></use>
-                </svg>
-                <div class="recipe__quantity">1000</div>
-                <div class="recipe__description">
-                  <span class="recipe__unit">g</span>
-                  pasta
-                </div>
-              </li>
-
-              <li class="recipe__ingredient">
-                <svg class="recipe__icon">
-                  <use href="src/img/icons.svg#icon-check"></use>
-                </svg>
-                <div class="recipe__quantity">0.5</div>
-                <div class="recipe__description">
-                  <span class="recipe__unit">cup</span>
-                  ricotta cheese
-                </div>
-              </li>
-            </ul>
-          </div>
-
-          <div class="recipe__directions">
-            <h2 class="heading--2">How to cook it</h2>
-            <p class="recipe__directions-text">
-              This recipe was carefully designed and tested by
-              <span class="recipe__publisher">The Pioneer Woman</span>. Please check out
-              directions at their website.
-            </p>
-            <a
-              class="btn--small recipe__btn"
-              href="http://thepioneerwoman.com/cooking/pasta-with-tomato-cream-sauce/"
-              target="_blank"
-            >
-              <span>Directions</span>
-              <svg class="search__icon">
-                <use href="src/img/icons.svg#icon-arrow-right"></use>
-              </svg>
-            </a>
-          </div>
-          -->
+        <div class="recipe__directions">
+          <h2 class="heading--2">How to cook it</h2>
+          <p class="recipe__directions-text">
+            This recipe was carefully designed and tested by
+            <span class="recipe__publisher">The Pioneer Woman</span>. Please check out
+            directions at their website.
+          </p>
+          <a
+            class="btn--small recipe__btn"
+            href="http://thepioneerwoman.com/cooking/pasta-with-tomato-cream-sauce/"
+            target="_blank"
+          >
+            <span>Directions</span>
+            <svg class="search__icon">
+              <use href="src/img/icons.svg#icon-arrow-right"></use>
+            </svg>
+          </a>
+        </div>
+        -->
       </div>
     </div>
 
@@ -313,28 +268,24 @@
         <div class="upload__column">
           <h3 class="upload__heading">Recipe data</h3>
           <label>Title</label>
-
-          <input value="" required name="title" type="text" />
+          <input value="TEST22" required name="title" type="text" />
           <label>URL</label>
-          <input value="" required name="sourceUrl" type="text" />
+          <input value="TEST22" required name="sourceUrl" type="text" />
           <label>Image URL</label>
-          <input value="" required name="image" type="text" />
+          <input value="TEST22" required name="image" type="text" />
           <label>Publisher</label>
-          <input value="" required name="publisher" type="text" />
-
-         
-
+          <input value="TEST22" required name="publisher" type="text" />
           <label>Prep time</label>
-          <input value="" required name="cookingTime" type="number" />
+          <input value="23" required name="cookingTime" type="number" />
           <label>Servings</label>
-          <input value="" required name="servings" type="number" />
+          <input value="23" required name="servings" type="number" />
         </div>
 
         <div class="upload__column">
           <h3 class="upload__heading">Ingredients</h3>
           <label>Ingredient 1</label>
           <input
-            value=""
+            value="0.5,kg,Rice"
             type="text"
             required
             name="ingredient-1"
@@ -342,28 +293,34 @@
           />
           <label>Ingredient 2</label>
           <input
-            value=""
+            value="1,,Avocado"
             type="text"
             name="ingredient-2"
             placeholder="Format: 'Quantity,Unit,Description'"
           />
           <label>Ingredient 3</label>
           <input
-            value=""
+            value=",,salt"
             type="text"
             name="ingredient-3"
             placeholder="Format: 'Quantity,Unit,Description'"
           />
           <label>Ingredient 4</label>
           <input
-            type=""
+            type="text"
             name="ingredient-4"
             placeholder="Format: 'Quantity,Unit,Description'"
           />
           <label>Ingredient 5</label>
           <input
-            type=""
+            type="text"
             name="ingredient-5"
+            placeholder="Format: 'Quantity,Unit,Description'"
+          />
+          <label>Ingredient 6</label>
+          <input
+            type="text"
+            name="ingredient-6"
             placeholder="Format: 'Quantity,Unit,Description'"
           />
         </div>
@@ -374,60 +331,6 @@
           </svg>
           <span>Upload</span>
         </button>
-      </form>
-    </div>
-
-    <div class="overlay-hotel hidden"></div>
-    <div class="add-hotel-window hidden">
-      <button class="btn--close-modal close-motal-hotel">&times;</button>
-      <div class="upload uploadHotel"></div>
-      <form class="upload upload-hotel">
-        <div class="upload__column formHotel">
-          <h3 class="upload__heading">Hotel data</h3>
-          <label>Name of hotel</label>
-          <input value="" name="title" type="text" />
-          <label>WEBSITE</label>
-          <input value="" name="sourceUrl" type="text" />
-          <label>Image URL</label>
-          <input value="" name="image" type="text" />
-          <label>Address</label>
-          <input value="" name="address" type="text" />
-          <label>Phone</label>
-          <input value="" name="Phone" type="phone" />
-          <label>Email</label>
-          <input value="" name="Email" type="email" />
-        </div>
-      </form>
-      <div class="buttons">
-        <button class="btn upload__btn save-hotel" type="submit">
-          <svg>
-            <use href="src/img/icons.svg#icon-upload-cloud"></use>
-          </svg>
-          <span>SAVE</span>
-        </button>
-        <button class="btn button-reload hidden">
-          <span class="glyphicon glyphicon-refresh"></span> Refresh
-        </button>
-      </div>
-    </div>
-    <div class="overlay-hotel-toRecipe hidden"></div>
-    <div class="add-hotel-toRecipe-window hidden">
-      <button class="btn--close-modal close-modal-hotel-toRecipe">
-        &times;
-      </button>
-
-      <form class="upload-hotel-toRecipe">
-        <div class="formHotel">
-          <h3 class="upload__heading">
-            Add hotel where you can find this meal
-          </h3>
-        </div>
-        <select
-          class="form-control"
-          name="hoteli"
-          multiple="multiple"
-          style="width: 100% !important"
-        ></select>
       </form>
     </div>
   </body>

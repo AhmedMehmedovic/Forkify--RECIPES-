@@ -4,7 +4,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 1;
 
   &__logo {
     margin-left: 4rem;
@@ -21,10 +20,10 @@
   padding-left: 3rem;
   transition: all 0.3s;
 
-  // &:focus-within {
-  //   transform: translateY(-2px);
-  //   box-shadow: 0 0.7rem 3rem rgba($color-grey-dark-1, 0.08);
-  // }
+  &:focus-within {
+    transform: translateY(-2px);
+    box-shadow: 0 0.7rem 3rem rgba($color-grey-dark-1, 0.08);
+  }
 
   &__field {
     border: none;
@@ -59,7 +58,7 @@
 
 .nav {
   align-self: stretch;
-  //margin-right: 2.5rem;
+  margin-right: 2.5rem;
 
   &__list {
     list-style: none;
@@ -108,8 +107,8 @@
 .bookmarks {
   padding: 1rem 0;
   position: absolute;
-  right: 0;
-  //right: -2.5rem;
+  // right: 0;
+  right: -2.5rem;
   z-index: 10;
   width: 40rem;
   background-color: #fff;
