@@ -1,8 +1,10 @@
 import { async } from 'regenerator-runtime';
 import { API_URL, RESULT_PER_PAGE, KEY } from './config';
+
 //import { getJSON, sendJSON } from './helpers'; /// zamijenjeno sa jednom funkcijom AJAX
 import { AJAX } from './helpers';
 import dropMenuView from './view/dropMenuView';
+import recepieView from './view/recepieView';
 import resultsView from './view/resultsView';
 
 export const state = {
@@ -16,8 +18,16 @@ export const state = {
   bookmarks: [],
 };
 
+export const saveConnections = function (hotels, recepieID = undefined) {
+  let forSave = localStorage.getItem('connections') ?? '{}';
+  forSave = JSON.parse(forSave);
+  forSave[recepieID ?? state.recipe.id] = hotels;
+  localStorage.setItem('connections', JSON.stringify(forSave));
+};
+
 const createRecipeObject = function (data) {
   const { recipe } = data.data;
+  const hotelIds = [1, 2, 4];
   return {
     id: recipe.id,
     title: recipe.title,
@@ -26,6 +36,7 @@ const createRecipeObject = function (data) {
     image: recipe.image_url,
     servings: recipe.servings,
     cookingTime: recipe.cooking_time,
+    hotels: hotelIds,
     ingredients: recipe.ingredients, ///informacija o sastojcima
     ...(recipe.key && { key: recipe.key }), /// ukoliko ne postoji recipe.key, nece se desiti nista, medjutim ukoliko postoji onda ce se spremiti kao da je napisano 'key: recipe.key ' (zaduzen spread operatotr ...)
   };

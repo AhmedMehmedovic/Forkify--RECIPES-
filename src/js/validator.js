@@ -7,6 +7,11 @@ export default class Validator {
     this.data = data;
   }
 
+  /**
+   *
+   * @param {string} name
+   * @returns {Rules}
+   */
   setRules(name) {
     const rules = new Rules(this.data?.[name], name);
     this.#rules[name] = rules;

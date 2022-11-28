@@ -72,8 +72,9 @@ class AddHotel extends View {
       //   console.log(element);
       // });
       const data = Object.fromEntries(self._dataArray);
+
       // data.id = randomId;
-      //  console.log(data);
+      //console.log(data);
       const validator = new Validator(data);
       validator
         .setRules('title')

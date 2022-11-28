@@ -1,4 +1,6 @@
 import * as model from './model.js';
+import { select2 } from '../../node_modules/select2';
+
 import { MODAL_CLOSE_SEC, RESULT_PER_PAGE } from './config.js';
 import RecipeView from './view/recepieView.js';
 import resultsView from './view/resultsView.js';
@@ -8,6 +10,7 @@ import addRecipeView from './view/addRecipeView.js';
 import addHotelView from './view/addHotelView.js';
 import rulesValidator from './rulesValidator.js';
 import DropMenu from './view/dropMenuView.js';
+import add_Hotel_ToRecipe from './view/addHotelToRecipe.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -38,6 +41,7 @@ const controlRecipes = async function () {
 
     if (id.match(digital)) {
       await model.loadHotel(id);
+      console.log('d');
       RecipeView.render(model.state.recipe);
     } else {
       await model.loadRecipe(id);
@@ -45,7 +49,7 @@ const controlRecipes = async function () {
     }
     //iz modela
 
-    //console.log(data.publisher);
+    // console.log(data.publisher);
     //const { recipe } = model.state;
 
     // Rendering recepi
@@ -54,6 +58,7 @@ const controlRecipes = async function () {
     //test  zbog async await funkcije
     // controlServings();
   } catch (err) {
+    console.log(err);
     recepieView.renderError();
   }
 };
@@ -250,6 +255,10 @@ const controlHotelData = function (data) {
   closeWindowHotel();
 };
 
+const modalHoteltoRecipe = function () {
+  console.log('s');
+};
+
 ///*** */
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarks);
@@ -272,6 +281,10 @@ const init = function () {
   addHotelView.clickElementHandler(addHotelView._btnClose, closeWindowHotel);
   addHotelView.addHotelData(controlHotelData);
 
+  recepieView.changeHandler(model.saveConnections);
+  //
+
+  // addHotelView.clickElementHandler(add_Hotel_ToRecipe._btnAddHotel);
   // controlServings();
 };
 init();
