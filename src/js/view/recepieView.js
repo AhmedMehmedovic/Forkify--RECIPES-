@@ -46,6 +46,29 @@ class RecipeView extends View {
     // generisanje html recepata console.log(this.data);
 
     if (this._data.type == 'hotel') {
+      const webDirections =
+        this._data.sourceUrl !== ''
+          ? ` <div class="recipe__directions">
+      <h2 class="heading--2">Please check out
+      directions to our website.</h2>
+     
+      <a
+        class="btn--small recipe__btn"
+        href="${this._data.sourceUrl}"
+        target="_blank"
+      >
+        <span>Website</span>
+        <svg class="search__icon">
+          <use href="${icons}#icon-arrow-right"></use>
+        </svg>
+      </a>
+    </div>`
+          : ` <div class="recipe__directions">
+      <h2 class="heading--2">We do not have website yet, please call us.</h2>
+     
+      
+    </div>`;
+
       return `
     <figure class="recipe__fig">
           <img src="${this._data.image}" alt="${this._data.title}" class="recipe__img" />
@@ -72,21 +95,7 @@ class RecipeView extends View {
          
         </div>       
 
-        <div class="recipe__directions">
-          <h2 class="heading--2">Please check out
-          directions to our website.</h2>
-         
-          <a
-            class="btn--small recipe__btn"
-            href="${this._data.sourceUrl}"
-            target="_blank"
-          >
-            <span>Website</span>
-            <svg class="search__icon">
-              <use href="${icons}#icon-arrow-right"></use>
-            </svg>
-          </a>
-        </div>
+       ${webDirections}
 
         <div class="recipe__directions">
         <h2 class="heading--3">Or you can call us on our phone:</h2>
