@@ -8,7 +8,7 @@ class PreviewView extends View {
     const id = window.location.hash.slice(1);
     const publisher =
       this._data.type === 'recepie' ? this._data.publisher : this._data.email;
-    console.log();
+
     const buttonBookmark =
       this._data.type === 'recepie'
         ? ` <button class="btn--inline btn--bookmark btn-delete-bookmark">
@@ -29,7 +29,6 @@ class PreviewView extends View {
         </p>
         
       </div>`;
-    //console.log(this._data);
     return `
     <li class="preview" data-type="${this._data.type}">
             <a class="preview__link ${
